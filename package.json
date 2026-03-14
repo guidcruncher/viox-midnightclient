@@ -1,0 +1,36 @@
+{
+  "name": "viox-midnightclient",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run format && vite --host",
+    "build": "vue-tsc -b && vite build --mode development",
+    "build:prod": "NODE_ENV=production vue-tsc -b && vite build --mode production",
+    "preview": "vite preview",
+    "format": "prettier --config ./.prettierrc --write src/",
+    "tidy": "knip --config ./knip.json",
+    "tidy:write": "knip --fix --config ./knip.json"
+  },
+  "dependencies": {
+    "axios": "^1.13.6",
+    "lucide-vue-next": "^0.577.0",
+    "tailwind-scrollbar-hide": "^4.0.0",
+    "vue": "^3.5.29",
+    "vue-router": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.3",
+    "@vitejs/plugin-vue": "^6.0.4",
+    "@vue/tsconfig": "^0.9.0",
+    "autoprefixer": "^10.4.27",
+    "knip": "^5.85.0",
+    "postcss": "^8.5.8",
+    "prettier": "^3.8.1",
+    "tailwindcss": "^3.4.0",
+    "typescript": "~5.9.3",
+    "unplugin-vue-components": "^31.0.0",
+    "vite": "^7.2.4",
+    "vue-tsc": "^3.2.5"
+  }
+}
