@@ -15,10 +15,13 @@
     "tidy:write": "knip --fix --config ./knip.json"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
+    "@tailwindcss/vite": "^4.2.2",
     "axios": "^1.14.0",
     "lucide-vue-next": "^1.0.0",
     "qs": "^6.15.0",
     "tailwind-scrollbar-hide": "^4.0.0",
+    "tailwindcss": "^4.2.2",
     "vue": "^3.5.31",
     "vue-router": "^5.0.4"
   },
@@ -31,7 +34,6 @@
     "@vitejs/plugin-vue": "^6.0.5",
     "@vue/eslint-config-typescript": "^14.7.0",
     "@vue/tsconfig": "^0.9.1",
-    "autoprefixer": "^10.4.27",
     "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-perfectionist": "^5.7.0",
@@ -39,9 +41,7 @@
     "eslint-plugin-vue": "^10.8.0",
     "globals": "^17.4.0",
     "knip": "^6.1.1",
-    "postcss": "^8.5.8",
     "prettier": "^3.8.1",
-    "tailwindcss": "^3.4.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.57.1",
     "unplugin-vue-components": "^32.0.0",

@@ -1,11 +1,13 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path from "path";
-import Components from 'unplugin-vue-components/vite'; // 1. Import the plugin
+import tailwindcss from "@tailwindcss/vite"; // 1. Import Tailwind v4 plugin
+import Components from 'unplugin-vue-components/vite';
 import lucideIconExtractor from './plugins/vite-lucide-icon-extractor';
 
 export default defineConfig({
   plugins: [
+    tailwindcss(), // 2. Add Tailwind plugin (ideally before vue())
     vue(),
     lucideIconExtractor(),
     Components({
