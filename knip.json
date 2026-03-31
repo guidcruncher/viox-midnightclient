@@ -1,0 +1,6 @@
+{
+  "entry": ["src/main.{js,ts}"],
+  "project": ["**/*.{js,ts,vue}"],
+  "ignore": ["src/**/*.spec.ts", "src/environments/**"],
+  "ignoreDependencies": ["@types/*"]
+}

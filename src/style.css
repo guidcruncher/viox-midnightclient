@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  background-color: #080c10;
+}
+
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' /%3E%3C/svg%3E");
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  }
+  .touch-active {
+    @apply transition-transform active:scale-[0.98] duration-150;
+  }
+
+  /* Input Base - Optimized to prevent cursor jumping */
+  .viox-input-base {
+    @apply w-full bg-viox-deep/30 rounded-lg px-4 py-3 
+           text-viox-ice placeholder-viox-lilac/40 outline-none 
+           font-sans border border-viox-ice/20;
+    /* Static border width prevents layout shifts */
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .viox-input-base:focus {
+    @apply border-viox-electric bg-viox-deep/50;
+    /* Using box-shadow for glow instead of 'ring' to keep caret stable */
+    box-shadow:
+      0 0 0 2px rgba(138, 43, 226, 0.15),
+      0 0 20px rgba(138, 43, 226, 0.3);
+  }
+
+  .viox-btn-primary {
+    @apply px-8 py-3 bg-viox-electric text-white font-bold rounded-lg 
+           shadow-glow-electric transition-all duration-300
+           hover:brightness-110 hover:animate-float active:scale-[0.96];
+  }
+
+  /* Custom Radio Only */
+  .viox-radio-root {
+    @apply appearance-none w-5 h-5 border-2 border-viox-ice/30 bg-viox-deep/60 
+           cursor-pointer transition-all duration-200 relative inline-flex 
+           items-center justify-center shrink-0 rounded-full
+           checked:bg-viox-electric checked:border-viox-electric
+           focus:ring-2 focus:ring-viox-electric/40;
+  }
+}
+
+@layer base {
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  textarea {
+    @apply viox-input-base;
+  }
+
+  label {
+    @apply block text-viox-ice text-sm font-semibold mb-2 tracking-wide font-display;
+  }
+
+  select {
+    @apply viox-input-base appearance-none cursor-pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23A0DFFF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.1em;
+  }
+
+  input[type='radio'] {
+    @apply viox-radio-root;
+  }
+  input[type='radio']:checked::after {
+    content: '';
+    @apply w-2 h-2 bg-white rounded-full;
+  }
+}
