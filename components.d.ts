@@ -42,6 +42,7 @@ declare module 'vue' {
     SquareCard: typeof import('./src/components/SquareCard.vue')['default']
     TabBar: typeof import('./src/components/TabBar.vue')['default']
     ToggleSwitch: typeof import('./src/components/ToggleSwitch.vue')['default']
+    Toolbar: typeof import('./src/components/Toolbar.vue')['default']
     TouchSlider: typeof import('./src/components/TouchSlider.vue')['default']
   }
 }

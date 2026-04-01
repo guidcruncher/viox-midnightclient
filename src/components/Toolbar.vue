@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-export interface ButtonItem {
+import type { IconName } from '@/generated/icon-types'
+
+export interface ToolbarButton {
   key: string
   label: string
   icon: IconName | string
@@ -7,7 +9,7 @@ export interface ButtonItem {
 
 interface Props {
   active: string
-  Buttons: ButtonItem[]
+  buttons: ToolbarButton[]
 }
 
 defineProps<Props>()
@@ -33,7 +35,7 @@ const handleClick = (button: any) => {
         class="toolbar-item"
         :class="button.key == active ? 'toolbar-item-active' : 'toolbar-item-ipnactive'"
       >
-        <LucideIcon v-if="button.icon" :IconName="button.icon" />
+        <LucideIcon v-if="button.icon" name="button.icon" />
         {{ button.label }}
       </button>
     </div>
