@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* Brand Colors */
@@ -8,8 +8,8 @@
   --color-viox-lilac: #c8a2c8;
 
   /* Typography */
-  --font-display: "Inter", "system-ui", "sans-serif";
-  --font-sans: "Inter", "ui-sans-serif", "sans-serif";
+  --font-display: 'Inter', 'system-ui', 'sans-serif';
+  --font-sans: 'Inter', 'ui-sans-serif', 'sans-serif';
 
   /* Animations */
   --animate-spin-slow: spin 8s linear infinite;
@@ -19,16 +19,31 @@
   --animate-fade-in: fadeIn 0.4s ease both;
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
   }
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   /* Custom Shadow */
@@ -40,10 +55,7 @@
     background-color: #080c10;
   }
 
-  /* Viox Input Logic:
-     Instead of @applying a custom class (which causes the error),
-     we apply the standard Tailwind utilities directly to the tags.
-  */
+  /* Viox Input Logic */
   input[type='text'],
   input[type='email'],
   input[type='password'],
@@ -60,7 +72,9 @@
   select:focus,
   textarea:focus {
     @apply border-viox-electric bg-viox-deep/50;
-    box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.15), 0 0 20px rgba(138, 43, 226, 0.3);
+    box-shadow:
+      0 0 0 2px rgba(138, 43, 226, 0.15),
+      0 0 20px rgba(138, 43, 226, 0.3);
   }
 
   label {
@@ -82,7 +96,7 @@
            checked:bg-viox-electric checked:border-viox-electric
            focus:ring-2 focus:ring-viox-electric/40;
   }
-  
+
   input[type='radio']:checked::after {
     content: '';
     @apply w-2 h-2 bg-white rounded-full;
@@ -107,15 +121,38 @@
   .glass {
     @apply bg-white/5 backdrop-blur-xl border border-white/10;
   }
+
+  /* --- Toolbar Components --- */
+  .toolbar-item {
+    @apply flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 
+           shrink-0 whitespace-nowrap cursor-pointer select-none;
+  }
+
+  .toolbar-item-active {
+    @apply bg-viox-electric/20 text-viox-ice border border-viox-electric/50 shadow-[0_0_15px_rgba(138,43,226,0.2)];
+  }
+
+  .toolbar-item-inactive {
+    @apply text-viox-lilac hover:bg-white/10 hover:text-white border border-transparent;
+  }
 }
 
 @layer utilities {
   .bg-noise {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' /%3E%3C/svg%3E");
   }
-  
+
   .touch-active {
     @apply transition-transform active:scale-[0.98] duration-150;
+  }
+
+  /* --- Hide Scrollbar Utility --- */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
 
