@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm run format && vite --host",
+    "db": "sudo sqlite3 ../run/data/datastore.db",
     "build": "vue-tsc -b && vite build --mode development",
     "build:prod": "NODE_ENV=production vue-tsc -b && vite build --mode production",
     "preview": "vite preview",
