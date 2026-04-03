@@ -126,15 +126,15 @@ onMounted(async () => {
 
     <div>
       <div>
-        <select v-model="reverb.filename">
-          <option v-for="item in reverbs" :key="item.filename" :value="item.filename">{{ item.title }}</option>
+        <select v-model="reverb.filename" v-for="item in reverbs" :key="item.filename">
+          <option :value="item.filename">{{ item.title }}</option>
         </select>
       </div>
       <div>
         Gain
-        <HorizontalSlider v-model="reverb.gain" id="gain" :min="0" :max="1" width="w-full" />
+        <HorizontalSlider v-model="reverb.gain" id="gain" :step="0.01" :min="0" :max="1" width="w-full" />
         Delay
-        <HorizontalSlider v-model="reverb.delay" id="delay"  :min="0" :max="1" width="w-full" />
+        <HorizontalSlider v-model="reverb.delay" id="delay" :step="0.01"  :min="0" :max="1" width="w-full" />
       </div>
     </div>
   </div>

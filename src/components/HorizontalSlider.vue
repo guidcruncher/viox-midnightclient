@@ -6,6 +6,7 @@ const props = defineProps<{
   modelValue: number
   min?: number
   max?: number
+  step?: number // The increment/decrement precision
   width?: string
 }>()
 
@@ -18,6 +19,8 @@ const sliderRef = ref<HTMLDivElement | null>(null)
 
 const min = computed(() => props.min ?? 0)
 const max = computed(() => props.max ?? 100)
+// Defaulting the step to 1 here
+const step = computed(() => props.step ?? 1)
 
 const percentage = computed(() => {
   const range = max.value - min.value
@@ -37,10 +40,28 @@ const handleInteraction = (e: MouseEvent | TouchEvent) => {
   const x = clientX - rect.left
   const width = rect.width
 
+  // Calculate ratio (0 to 1)
   const ratio = Math.max(0, Math.min(1, x / width))
-  const newValue = Math.round(min.value + ratio * (max.value - min.value))
+  
+  // Find raw value based on the range
+  const rawValue = min.value + ratio * (max.value - min.value)
+  
+  // Snap the raw value to the nearest step
+  // Math: Min + Round((Distance from Min) / Step) * Step
+  let steppedValue = Math.round((rawValue - min.value) / step.value) * step.value + min.value
+  
+  // Clamp to ensure it stays within min/max bounds
+  steppedValue = Math.max(min.value, Math.min(max.value, steppedValue))
 
-  emit('update:modelValue', newValue)
+  // Handle JS floating point math (e.g., 0.1 + 0.2 = 0.300000004)
+  // We determine the number of decimal places in the step and match it
+  const stepString = step.value.toString()
+  const precision = stepString.includes('.') ? stepString.split('.')[1].length : 0
+  const finalValue = Number(steppedValue.toFixed(precision))
+
+  if (finalValue !== props.modelValue) {
+    emit('update:modelValue', finalValue)
+  }
 }
 
 watch(
