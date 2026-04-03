@@ -8,6 +8,7 @@ const audio = useAudioSettings()
 const presets = ref<string[]>([])
 const reverbs = ref<any[]>([])
 const reverb = ref<any>({ enabled: false, filename: 'bypass.wav', gain: 1, delay: 0 })
+const ready =  ref(false)
 
 // Band keys come directly from the composable's eq object
 const bandKeys = computed(() => (audio.eq.value ? Object.keys(audio.eq.value) : []))
@@ -57,11 +58,13 @@ const updateFromEvent = (e: MouseEvent | TouchEvent) => {
 onMounted(async () => {
   presets.value = (await ApiClient.getEqPresets()).data as string[]
   reverbs.value = (await ApiClient.getReverbPresets()).data as any[]
+  ready.value = true
+  alert(JSON.stringify(reverbs.value))
 })
 </script>
 
 <template>
-  <div
+  <div v-if="ready"
     class="w-full flex flex-col gap-4 rounded-2xl p-4 backdrop-blur-xl bg-white/5 border border-white/10"
   >
     <!-- Header -->
@@ -126,14 +129,14 @@ onMounted(async () => {
 
     <div>
       <div>
-        <select v-model="reverb.filename" v-for="item in reverbs" :key="item.filename">
-          <option :value="item.filename">{{ item.title }}</option>
+        <select v-model="reverb.filename">
+          <option v-for="item in reverbs" :key="item.filename" :value="item.filename">{{ item.title }}</option>
         </select>
       </div>
       <div>
-        Gain
+        Gain {{ reverb.gain }}
         <HorizontalSlider v-model="reverb.gain" id="gain" :step="0.01" :min="0" :max="1" width="w-full" />
-        Delay
+        Delay {{ reverb.delay }}
         <HorizontalSlider v-model="reverb.delay" id="delay" :step="0.01"  :min="0" :max="1" width="w-full" />
       </div>
     </div>
