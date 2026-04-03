@@ -6,6 +6,8 @@ import { useAudioSettings } from '@/composables/useAudioSettings'
 
 const audio = useAudioSettings()
 const presets = ref<string[]>([])
+const reverbs = ref<any[]>([])
+const reverb = ref<any>({ enabled: false, filename: 'bypass.wav', gain: 1, delay: 0 })
 
 // Band keys come directly from the composable's eq object
 const bandKeys = computed(() => (audio.eq.value ? Object.keys(audio.eq.value) : []))
@@ -54,6 +56,7 @@ const updateFromEvent = (e: MouseEvent | TouchEvent) => {
 
 onMounted(async () => {
   presets.value = (await ApiClient.getEqPresets()).data as string[]
+  reverbs.value = (await ApiClient.getReverbPresets()).data as any[]
 })
 </script>
 
@@ -118,6 +121,20 @@ onMounted(async () => {
         <span class="mt-2 text-xs text-white/60 tracking-wide uppercase">
           {{ key }}
         </span>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <select v-model="reverb.filename">
+          <option v-for="item in reverbs" :key="item.filename" :value="item.filename">{{ item.title }}</option>
+        </select>
+      </div>
+      <div>
+        Gain
+        <HorizontalSlider v-model="reverb.gain" id="gain" :min="0" :max="1" width="w-full" />
+        Delay
+        <HorizontalSlider v-model="reverb.delay" id="delay"  :min="0" :max="1" width="w-full" />
       </div>
     </div>
   </div>
