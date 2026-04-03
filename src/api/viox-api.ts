@@ -57,6 +57,19 @@ export class VIOXApi {
   }
 
   /* ---------------------- EQ ---------------------- */
+
+  getReverbPresets(): Promise<AxiosResponse<any[]>> {
+    return this.http.get('/api/eq/reverb/')
+  }
+
+  setReverb(filename: string, gain: number, delay: number): Promise<AxiosResponse<any>> {
+    return this.http.post('/api/eq/reverb', { filename, gain, delay })
+  }
+
+  toggleReverb(state: boolean): Promise<AxiosResponse<any>> {
+    return this.http.post(`/api/eq/reverb/${state ? 'on' : 'off'}`)
+  }
+
   getEqLevels(): Promise<AxiosResponse<any>> {
     return this.http.get('/api/eq')
   }
