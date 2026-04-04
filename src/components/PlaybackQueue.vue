@@ -41,7 +41,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="w-full max-w-md animate-slide-up relative">
+  <div class="w-full min-w-md animate-slide-up relative">
     <!-- Queue Header -->
     <div class="flex items-center justify-between mb-6 px-2">
       <div>

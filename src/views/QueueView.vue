@@ -5,7 +5,5 @@ onMounted(async () => {})
 </script>
 
 <template>
-  <div>
     <PlaybackQueue />
-  </div>
 </template>
