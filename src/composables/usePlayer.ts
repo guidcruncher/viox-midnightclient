@@ -1,10 +1,10 @@
 import type { MediaItem } from '../types/'
 
-import { watch, ref, onMounted } from 'vue'
+import { watch, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { ApiClient } from '@/api'
-import { useEventBus } from '@/plugins/eventBus'
+import { on, off } from './useEventBus'
 
 let bus: any = undefined
 
@@ -20,50 +20,39 @@ const handlePlayer = () => {
 export function usePlayer() {
   const router = useRouter()
 
-  if (!bus) bus = useEventBus()
-
   onMounted(async () => {
     await status()
+
+    on('track_change', (payload) => {
+      await status()
+      playing.value = true
+    })
+    on('track_start', (payload) => {
+      await status()
+      playing.value = true
+    })
+    on('track_stop', (payload) => {
+      await status()
+      playing.value = false
+      progress.value = 0
+    })
+    on('track_pause', (payload) => {
+      await status()
+      playing.value = false
+    })
+    on('track_resume', (payload) => {
+      await status()
+      playing.value = true
+    })
   })
 
-  watch(
-    () => bus.lastEvent,
-    async (newEvent, _oldEvent) => {
-      if (newEvent) {
-        console.log('New event received:', newEvent.type, newEvent.payload)
-      }
-
-      if (!event) return
-
-      switch (event.type) {
-        case 'metadata':
-          break
-        case 'track_change':
-          await status()
-          playing.value = true
-          break
-        case 'track_start':
-          await status()
-          playing.value = true
-          break
-        case 'track_stop':
-          await status()
-          playing.value = false
-          progress.value = 0
-          break
-        case 'track_pause':
-          await status()
-          playing.value = false
-          break
-        case 'track_resume':
-          await status()
-          playing.value = true
-          break
-      }
-    },
-    { deep: true }
-  )
-
+  onbeforeUnmount(() => {
+    off('track_change')
+    off('track_start')
+    off('track_stop')
+    off('track_pause')
+    off('track_resume')
+  })
   // --- Methods ---
 
   const status = async () => {

@@ -42,14 +42,14 @@ const handleInteraction = (e: MouseEvent | TouchEvent) => {
 
   // Calculate ratio (0 to 1)
   const ratio = Math.max(0, Math.min(1, x / width))
-  
+
   // Find raw value based on the range
   const rawValue = min.value + ratio * (max.value - min.value)
-  
+
   // Snap the raw value to the nearest step
   // Math: Min + Round((Distance from Min) / Step) * Step
   let steppedValue = Math.round((rawValue - min.value) / step.value) * step.value + min.value
-  
+
   // Clamp to ensure it stays within min/max bounds
   steppedValue = Math.max(min.value, Math.min(max.value, steppedValue))
 

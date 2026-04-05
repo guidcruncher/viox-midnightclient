@@ -6,7 +6,7 @@ import { useAudioSettings } from '@/composables/useAudioSettings'
 
 const audio = useAudioSettings()
 const presets = ref<string[]>([])
-const ready =  ref(false)
+const ready = ref(false)
 
 // Band keys come directly from the composable's eq object
 const bandKeys = computed(() => (audio.eq.value ? Object.keys(audio.eq.value) : []))
@@ -60,7 +60,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="ready"
+  <div
+    v-if="ready"
     class="w-full flex flex-col gap-4 rounded-2xl p-4 backdrop-blur-xl bg-white/5 border border-white/10"
   >
     <!-- Header -->
@@ -122,6 +123,5 @@ onMounted(async () => {
         </span>
       </div>
     </div>
-
   </div>
 </template>
