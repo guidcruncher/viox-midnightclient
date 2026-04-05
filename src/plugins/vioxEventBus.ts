@@ -1,83 +1,77 @@
 import { emit } from '@/composables/useEventBus'
-
 import { getBaseUrl } from '../utils/baseUrl'
 
+/**
+ * Transforms HTTP/S base URL to WS/S
+ */
 function getEventBusUrl(): string {
-  const urlBase = getBaseUrl().replace('https://', 'wss://').replace('http://', 'ws://')
-
-  return `${urlBase}/api/events`
+  const urlBase = getBaseUrl().replace(/^http/, 'ws');
+  return `${urlBase}/api/events`;
 }
 
-class ws {
-  static socket: any = undefined
+class SocketManager {
+  private static instance: WebSocket | null = null;
 
-  public static get() {
-    ws.socket = new WebSocket(getEventBusUrl())
-    return ws.socket
+  public static get(): WebSocket {
+    if (!this.instance || this.instance.readyState > 1) { // 2 = Closing, 3 = Closed
+      this.instance = new WebSocket(getEventBusUrl());
+    }
+    return this.instance;
   }
 
-  public static send(message) {
-    ws.get().send(json.stringify(message))
+  public static send(message: any) {
+    const socket = this.get();
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify(message));
+    } else {
+      console.warn('Socket not open. Message queued or dropped.');
+    }
   }
 }
 
 export const registerEventBus = () => {
-  if (window._socket) {
-    return
-  }
+  // Prevent duplicate registration
+  if ((window as any)._socketInitialized) return;
+  (window as any)._socketInitialized = true;
 
-  window._socket = null
-  if (window._socketHandle) {
-    clearInterval(window._socketHandle)
-    window._socketHandle = null
-  }
+  let socketHandle: any = null;
 
-  window.startWebSocket = () => {
-    // Create WebSocket connection.
-    window._socket = ws.get()
+  const startWebSocket = () => {
+    const socket = SocketManager.get();
 
-    // Connection opened
-    window._socket.addEventListener('open', (event) => {
-      window._socketHandle = setInterval(sendPing, 5000)
-    })
+    socket.onopen = () => {
+      console.log('WS Connected');
+      socketHandle = setInterval(sendPing, 5000);
+    };
 
-    // Listen for messages
-    window._socket.addEventListener('message', (event) => {
-      const data = JSON.parse(event.data)
-
-      if (data.type) {
-        console.log(`event ${data.type}`, data.payload)
-        emit(data.type, data.payload)
+    socket.onmessage = (event:any) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type) {
+          emit(data.type, data.payload);
+        }
+      } catch (e) {
+        console.error("Failed to parse WS message", e);
       }
-    })
+    };
 
-    window._socket.addEventListener('close', (event) => {
-      if (window._socketHandle) {
-        clearInterval(window._socketHandle)
-        window._socketHandle = null
-      }
-      window._socket = null
-      setTimeout(window.startWebsocket, 5000)
-    })
+    socket.onclose = () => {
+      console.log('WS Closed. Reconnecting in 5s...');
+      if (socketHandle) clearInterval(socketHandle);
+      setTimeout(startWebSocket, 5000);
+    };
 
     const sendPing = () => {
-      if (!window._socket) {
-        return
-      }
-      if (!window._socket.ready != 1) {
-        if (window._socketHandle) {
-          clearInterval(window._socketHandle)
-          window._socketHandle = null
-        }
-        window._socket = null
-        setTimeout(window.startWebsocket, 5000)
-        return
-      }
-      let id = Math.floor(Math.random() * (32767 - 1 + 1)) + 1
-      let json = `{"jsonrpc": "2.0","id": ${id},"method": "core.ping"}`
-      window._socket.send(json)
-    }
-  }
+      if (socket.readyState !== WebSocket.OPEN) return;
+      
+      const id = Math.floor(Math.random() * 32767) + 1;
+      socket.send(JSON.stringify({
+        jsonrpc: "2.0",
+        id: id,
+        method: "core.ping"
+      }));
+    };
+  };
 
-  window.startWebSocket()
-}
+  startWebSocket();
+};

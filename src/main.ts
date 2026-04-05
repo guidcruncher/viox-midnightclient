@@ -1,8 +1,9 @@
 import { createApp } from 'vue'
 
 import App from './App.vue'
-import router from './router'
 import { registerEventBus } from './plugins/vioxEventBus'
+import router from './router'
+
 import './style.css'
 
 async function bootstrap() {

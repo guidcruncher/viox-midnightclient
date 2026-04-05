@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
-import { useEventBus } from '@/plugins/eventBus'
-
 import BackgroundEffects from '../components/BackgroundEffects.vue'
 import HeaderBar from '../components/HeaderBar.vue'
 import PlayerFullscreen from '../components/PlayerFullscreen.vue'
@@ -24,19 +22,8 @@ const toast = ref<toastSetting>({
   type: 'error',
 })
 
-const bus = useEventBus()
-
 const { showFullPlayer } = usePlayer()
 const cleanUI = ref<boolean>(false)
-
-bus.on('eventbus_error', (event) => {
-  toast.value = {
-    title: 'System Error',
-    message: event.payload.message,
-    type: 'error',
-    visible: true,
-  }
-})
 
 onMounted(async () => {})
 </script>

@@ -21,9 +21,7 @@ export interface VioxEvent {
 
 import mitt, { type EventType } from 'mitt'
 
-export interface GlobalEvents extends Record<EventType, unknown> {}
-
-const emitter = mitt<GlobalEvents>()
+const emitter = mitt<Record<EventType, VioxEvent>>()
 
 export function useEventBus() {
   return emitter

@@ -1,12 +1,11 @@
 import type { MediaItem } from '../types/'
 
-import { watch, ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { ApiClient } from '@/api'
-import { on, off } from './useEventBus'
 
-let bus: any = undefined
+import { on, off } from './useEventBus'
 
 const playing = ref(false)
 const currentTrack = ref<MediaItem | undefined>(undefined)
@@ -23,30 +22,30 @@ export function usePlayer() {
   onMounted(async () => {
     await status()
 
-    on('track_change', (payload) => {
+    on('track_change', async(_payload: any) => {
       await status()
       playing.value = true
     })
-    on('track_start', (payload) => {
+    on('track_start', async(_payload: any) => {
       await status()
       playing.value = true
     })
-    on('track_stop', (payload) => {
+    on('track_stop', async(_payload: any) => {
       await status()
       playing.value = false
       progress.value = 0
     })
-    on('track_pause', (payload) => {
+    on('track_pause', async(_payload: any) => {
       await status()
       playing.value = false
     })
-    on('track_resume', (payload) => {
+    on('track_resume', async(_payload: any) => {
       await status()
       playing.value = true
     })
   })
 
-  onbeforeUnmount(() => {
+  onBeforeUnmount(() => {
     off('track_change')
     off('track_start')
     off('track_stop')
