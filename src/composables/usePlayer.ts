@@ -22,24 +22,24 @@ export function usePlayer() {
   onMounted(async () => {
     await status()
 
-    on('track_change', async(_payload: any) => {
+    on('track_change', async (_payload: any) => {
       await status()
       playing.value = true
     })
-    on('track_start', async(_payload: any) => {
+    on('track_start', async (_payload: any) => {
       await status()
       playing.value = true
     })
-    on('track_stop', async(_payload: any) => {
+    on('track_stop', async (_payload: any) => {
       await status()
       playing.value = false
       progress.value = 0
     })
-    on('track_pause', async(_payload: any) => {
+    on('track_pause', async (_payload: any) => {
       await status()
       playing.value = false
     })
-    on('track_resume', async(_payload: any) => {
+    on('track_resume', async (_payload: any) => {
       await status()
       playing.value = true
     })
