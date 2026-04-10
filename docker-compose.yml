@@ -1,0 +1,20 @@
+networks:
+  proxy:
+    external: true
+
+services:
+  viox-midnightclient:
+    image: guidcruncher/viox-midnightclient:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: viox-midnightclient
+    hostname: viox-midnightclient
+    restart: unless-stopped
+    networks:
+      - proxy
+    # Environment variables
+    environment:
+      - XDG_RUNTIME_DIR=/run/user/1000
+      - BASE_URL=https://raspberry-pi.starling-escalator.ts.net
+
