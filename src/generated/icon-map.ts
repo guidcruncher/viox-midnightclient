@@ -21,7 +21,6 @@ import {
   Podcast,
   Radio,
   Search,
-  Settings,
   Shell,
   SkipBack,
   SkipForward,
@@ -33,7 +32,7 @@ import {
   Volume1,
   Volume2,
   VolumeX,
-  X,
+  X
 } from 'lucide-vue-next'
 
 export const iconMap = {
@@ -58,7 +57,6 @@ export const iconMap = {
   Podcast,
   Radio,
   Search,
-  Settings,
   Shell,
   SkipBack,
   SkipForward,

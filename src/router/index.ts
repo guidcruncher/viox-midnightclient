@@ -5,7 +5,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import AppLayout from '../layouts/AppLayout.vue'
 import AuthService from '../services/authService'
-import AboutView from '../views/AboutView.vue'
 import AlbumView from '../views/AlbumView.vue'
 import AuthCallback from '../views/AuthCallback.vue'
 import CatalogView from '../views/CatalogView.vue'
@@ -15,7 +14,6 @@ import PlaylistView from '../views/PlaylistView.vue'
 import PodcastView from '../views/PodcastView.vue'
 import QueueView from '../views/QueueView.vue'
 import SoundSettings from '../views/SoundSettings.vue'
-import SystemSettings from '../views/SystemSettings.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -98,18 +96,6 @@ const routes: RouteRecordRaw[] = [
         name: 'sound',
         component: SoundSettings,
         meta: { title: 'Sound Desk' },
-      },
-      {
-        path: 'settings',
-        name: 'settings',
-        component: SystemSettings,
-        meta: { title: 'Configuration' },
-      },
-      {
-        path: 'about',
-        name: 'about',
-        component: AboutView,
-        meta: { title: 'About' },
       },
     ],
   },
