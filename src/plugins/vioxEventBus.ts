@@ -42,15 +42,14 @@ export const registerEventBus = () => {
     const socket = SocketManager.get()
 
     socket.onopen = () => {
-      console.log('WS Connected')
       socketHandle = setInterval(sendPing, 5000)
     }
 
     socket.onmessage = (event: any) => {
       try {
         const data = JSON.parse(event.data)
-        if (data.type) {
-          emit(data.type, data.payload)
+        if (data.event) {
+          emit(data.event.type, data.event.payload)
         }
       } catch (e) {
         console.error('Failed to parse WS message', e)
@@ -58,7 +57,6 @@ export const registerEventBus = () => {
     }
 
     socket.onclose = () => {
-      console.log('WS Closed. Reconnecting in 5s...')
       if (socketHandle) clearInterval(socketHandle)
       setTimeout(startWebSocket, 5000)
     }
