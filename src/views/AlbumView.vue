@@ -44,7 +44,7 @@ onMounted(async () => {
   const route = useRoute()
   albumId.value = getQueryString(route.query.id)
   album.value = (await ApiClient.getLibraryItem(albumId.value)).data
-  handleLoadMore({ offset: 0, limit: pageSize, done: () => {} })
+  // handleLoadMore({ offset: 0, limit: pageSize, done: () => {} })
   ready.value = true
 })
 
@@ -59,9 +59,11 @@ const handlePlayAll = async () => {
 
 <template>
   <div v-if="ready">
-    <TrackList
+    <TrackList v-if="album && items"
       :parent="album"
       :tracks="items"
+      :loading="isLoading"
+      :page-size="pageSize"
       @favorite="handleAdd"
       @playall="handlePlayAll"
       @load-more="handleLoadMore"
