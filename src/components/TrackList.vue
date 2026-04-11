@@ -1,38 +1,38 @@
 <script setup lang="ts">
-import type { MediaItem } from "../types";
+import type { MediaItem } from '../types'
 
-import { usePlayer } from "../composables/usePlayer";
+import { usePlayer } from '../composables/usePlayer'
 
 interface Props {
-  parent: MediaItem | undefined;
-  tracks: MediaItem[] | undefined;
+  parent: MediaItem | undefined
+  tracks: MediaItem[] | undefined
 }
 
-const props = defineProps<Props>();
-const emit = defineEmits(["load-more", "playall", "favourite", "click"]);
+const props = defineProps<Props>()
+const emit = defineEmits(['load-more', 'playall', 'favourite', 'click'])
 
-const { currentTrack, playItem } = usePlayer();
+const { currentTrack, playItem } = usePlayer()
 
 const handleTrackSelect = async (track: any) => {
   if (props.parent) {
-    await playItem(track, props.parent.sourceRef.sourceId);
-    emit("click", track);
+    await playItem(track, props.parent.sourceRef.sourceId)
+    emit('click', track)
   }
-};
+}
 
 const handlePlayAll = async () => {
   if (props.parent) {
-    await playItem(props.parent);
-    emit("playall", props.parent);
+    await playItem(props.parent)
+    emit('playall', props.parent)
   }
-};
+}
 
 const formatDuration = (durationMs: number | undefined) => {
-  if (!durationMs) return "";
-  const minutes = Math.floor(durationMs / 60000);
-  const seconds = Math.floor((durationMs % 60000) / 1000);
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-};
+  if (!durationMs) return ''
+  const minutes = Math.floor(durationMs / 60000)
+  const seconds = Math.floor((durationMs % 60000) / 1000)
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`
+}
 </script>
 
 <template>
@@ -59,11 +59,7 @@ const formatDuration = (durationMs: number | undefined) => {
               @click="handlePlayAll"
               class="w-20 h-20 bg-[#8A2BE2] rounded-full flex items-center justify-center shadow-glow-electric animate-float"
             >
-              <LucideIcon
-                name="Play"
-                size="36"
-                class="translate-x-1 fill-white text-white"
-              />
+              <LucideIcon name="Play" size="36" class="translate-x-1 fill-white text-white" />
             </button>
           </div>
         </div>
@@ -85,15 +81,11 @@ const formatDuration = (durationMs: number | undefined) => {
             >
               {{ props.parent.artist }}
             </span>
-            <span
-              class="w-1.5 h-1.5 bg-[#8A2BE2] rounded-full shadow-[0_0_5px_#8A2BE2]"
-            ></span>
+            <span class="w-1.5 h-1.5 bg-[#8A2BE2] rounded-full shadow-[0_0_5px_#8A2BE2]"></span>
             <span class="text-white/60">{{ props.parent.releaseDate }}</span>
           </div>
 
-          <div
-            class="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-4"
-          >
+          <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-4">
             <button
               class="px-10 py-4 bg-[#8A2BE2] text-white font-black rounded-xl shadow-[0_0_30px_rgba(138,43,226,0.5)] hover:shadow-[0_0_40px_rgba(138,43,226,0.7)] hover:-translate-y-1 active:translate-y-0 transition-all flex items-center gap-3"
               @click="handlePlayAll"
@@ -157,12 +149,10 @@ const formatDuration = (durationMs: number | undefined) => {
                 <span
                   :class="[
                     'font-mono text-sm group-hover:hidden',
-                    currentTrack?.id === track.id
-                      ? 'text-[#A0DFFF]'
-                      : 'text-[#C8A2C8]/30',
+                    currentTrack?.id === track.id ? 'text-[#A0DFFF]' : 'text-[#C8A2C8]/30',
                   ]"
                 >
-                  {{ String(idx + 1).padStart(2, "0") }}
+                  {{ String(idx + 1).padStart(2, '0') }}
                 </span>
 
                 <LucideIcon
@@ -170,9 +160,7 @@ const formatDuration = (durationMs: number | undefined) => {
                   size="16"
                   :class="[
                     'hidden group-hover:block mx-auto',
-                    currentTrack?.id === track.id
-                      ? 'text-[#A0DFFF] fill-current'
-                      : 'text-white',
+                    currentTrack?.id === track.id ? 'text-[#A0DFFF] fill-current' : 'text-white',
                   ]"
                 />
               </template>
@@ -189,10 +177,9 @@ const formatDuration = (durationMs: number | undefined) => {
               >
                 {{ track.title }}
               </span>
-              <span
-                class="text-xs font-medium text-[#C8A2C8]/60 uppercase tracking-widest"
-                >{{ track.artist }}</span
-              >
+              <span class="text-xs font-medium text-[#C8A2C8]/60 uppercase tracking-widest">{{
+                track.artist
+              }}</span>
             </div>
 
             <div class="hidden sm:flex items-center justify-end pr-10">
