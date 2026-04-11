@@ -67,9 +67,8 @@ export const registerEventBus = () => {
       const id = Math.floor(Math.random() * 32767) + 1
       socket.send(
         JSON.stringify({
-          jsonrpc: '2.0',
-          id: id,
-          method: 'core.ping',
+          request_id: id,
+          command: 'ping',
         })
       )
     }
