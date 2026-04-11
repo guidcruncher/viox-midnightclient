@@ -85,9 +85,5 @@ export type PlaybackState =
   | { type: 'error'; error: PlaybackError }
 
 export interface ConfigFile {
-  backEndLimit: number
-  maxCacheSize: number
-  radioProvider: string
-  enableCache: boolean
-  visualization?: string
+  version: string
 }

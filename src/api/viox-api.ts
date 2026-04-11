@@ -5,7 +5,6 @@ import {
   Playlist,
   SuccessResponse,
   MediaItem,
-  ConfigFile,
   AudioSourceItemType,
   SuccessTrackResponse,
 } from './types'
@@ -44,16 +43,6 @@ export class VIOXApi {
 
   getBackends(): Promise<AxiosResponse<string[]>> {
     return this.http.get('/api/backends')
-  }
-
-  /* ---------------------- Config ---------------------- */
-
-  getConfig(): Promise<AxiosResponse<ConfigFile>> {
-    return this.http.get('/api/config')
-  }
-
-  updateConfig(config: ConfigFile): Promise<AxiosResponse<SuccessResponse>> {
-    return this.http.post('/api/config', { config })
   }
 
   /* ---------------------- EQ ---------------------- */
