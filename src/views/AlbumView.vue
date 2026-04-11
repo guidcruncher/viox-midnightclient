@@ -59,7 +59,8 @@ const handlePlayAll = async () => {
 
 <template>
   <div v-if="ready">
-    <TrackList v-if="album && items"
+    <TrackList
+      v-if="album && items"
       :parent="album"
       :tracks="items"
       :loading="isLoading"

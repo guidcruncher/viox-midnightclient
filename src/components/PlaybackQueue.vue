@@ -59,7 +59,7 @@ onMounted(async () => {
     </div>
 
     <!-- Scrollable List -->
-    <div v-if="ready" class="space-y-3 max-h-[60vh] overflow-y-auto scrollbar-hide pr-1">
+    <div v-if="ready" class="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
       <div
         v-for="track in tracks"
         :key="track.id"

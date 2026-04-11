@@ -305,6 +305,24 @@ export class VIOXApi {
       params: { id, offset, limit },
     })
   }
+
+  playlistToMediaItem(playlist: Playlist): MediaItem | undefined {
+    if (!playlist) return undefined
+
+    return {
+      id: playlist.id,
+      sourceRef: {
+        source: playlist.source,
+        itemType: 'playlist',
+        sourceId: playlist.sourceId || '',
+        uri: playlist.sourceUri,
+      },
+      title: playlist.name,
+      description: playlist.description,
+      imageUrl: playlist.imageUrl,
+      durationMs: undefined,
+    }
+  }
 }
 
 export const ApiClient = new VIOXApi()
