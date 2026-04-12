@@ -6,7 +6,6 @@ defineProps<{
   itemType: string;
   title: string;
   subtitle?: string;
-  showAdd?: string;
 }>();
 
 defineEmits<{
@@ -27,7 +26,6 @@ defineEmits<{
   >
     <button
       v-if="
-        showAdd == 'true' &&
         item.sourceRef.itemType != 'metadata' &&
         item.sourceRef.itemType != 'folder'
       "

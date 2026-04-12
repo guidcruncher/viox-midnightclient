@@ -325,6 +325,7 @@ export class VIOXApi {
       description: playlist.description,
       imageUrl: playlist.imageUrl,
       durationMs: undefined,
+      library: playlist.library,
     }
   }
 }

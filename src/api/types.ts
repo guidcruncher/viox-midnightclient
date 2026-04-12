@@ -38,6 +38,7 @@ export interface MediaItem {
   description?: string
   releaseDate?: string
   explicit?: boolean
+  library?: boolean
 }
 
 export interface Playlist {
@@ -51,6 +52,7 @@ export interface Playlist {
   sourceUri?: string // spotify:playlist:xxx
 
   totalItems: number
+  library?: boolean
 }
 
 export interface PlaylistMetadata {
