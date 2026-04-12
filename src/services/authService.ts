@@ -1,5 +1,6 @@
-import { getBaseUrl } from '../utils/baseUrl'
 import { ApiClient } from '@/api'
+
+import { getBaseUrl } from '../utils/baseUrl'
 
 class AuthService {
   isLoggedIn(): boolean {
