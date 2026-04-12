@@ -39,6 +39,7 @@ export interface MediaItem {
   description?: string
   releaseDate?: string
   explicit?: boolean
+  library?:boolean
 }
 
 export interface UnifiedSearchResult {
