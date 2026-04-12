@@ -159,7 +159,7 @@ onUnmounted(() => {
               @click="$emit('favourite', props.parent)"
             >
               <LucideIcon v-if="!props.parent.library" name="Heart" size="20" />
-              <LucideIcon v-else name="Heart-Off" size="20" />
+              <LucideIcon v-else name="HeartOff" size="20" />
             </button>
           </div>
         </div>

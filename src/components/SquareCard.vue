@@ -35,7 +35,7 @@ defineEmits<{
       class="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-white hover:bg-black/80 transition"
     >
       <LucideIcon v-if="!item.library" name="Heart" :size="18" class="text-yellow-400" />
-      <LucideIcon v-else name="Heart-Off" :size="18" class="text-yellow-400" />
+      <LucideIcon v-else name="HeartOff" :size="18" class="text-yellow-400" />
     </button>
 
     <img
