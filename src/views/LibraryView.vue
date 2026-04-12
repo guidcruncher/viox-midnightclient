@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router'
 
 import { ApiClient } from '@/api'
 import { usePlayer } from '@/composables/usePlayer'
+import { useStorage } from '@/composables/useStorage'
 
 const router = useRouter()
 
@@ -15,10 +16,11 @@ interface LoadMoreEvent {
   done: (moreAvailable: boolean) => void
 }
 
+	
 const parentItem = ref<MediaItem | undefined>(undefined)
 const ready = ref(false)
 const { currentTrack, playItem } = usePlayer()
-const musicFilter = ref<any>({})
+const musicFilter = useStorage<any>("currentLibraryFilter", {}, "local")
 const items = ref<MediaItem[]>([])
 const isLoading = ref(false)
 const pageSize = 20
@@ -79,7 +81,7 @@ const handleSelect = async (item: MediaItem) => {
 }
 
 const handleFilter = async (filter: any) => {
-  musicFilter.value = filter
+  musicFilter.set (filter)
   items.value = []
   //  handleLoadMore({ offset: 0, limit: pageSize, done: () => {} });
 }
