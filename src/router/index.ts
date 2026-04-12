@@ -111,12 +111,15 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to: RouteLocationNormalized, _from, next) => {
+router.beforeEach(async (to: RouteLocationNormalized, _from, next) => {
   const isAuthenticated = AuthService.isLoggedIn()
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    window.location.href = AuthService.getLoginUrl()
-    return
+    await AuthService.refreshToken()
+    if (!AuthService.isLoggedIn()) {
+      window.location.href = AuthService.getLoginUrl()
+      return
+    }
   }
 
   next()

@@ -272,6 +272,10 @@ export class VIOXApi {
     })
   }
 
+  getToken(): Promise<AxiosResponse<string>> {
+    return this.http.get('/api/spotify/auth')
+  }
+
   getLocalItems(
     id?: string,
     offset?: number,

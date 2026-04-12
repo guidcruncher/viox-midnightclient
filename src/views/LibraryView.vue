@@ -16,11 +16,10 @@ interface LoadMoreEvent {
   done: (moreAvailable: boolean) => void
 }
 
-	
 const parentItem = ref<MediaItem | undefined>(undefined)
 const ready = ref(false)
 const { currentTrack, playItem } = usePlayer()
-const musicFilter = useStorage<any>("currentLibraryFilter", {}, "local")
+const musicFilter = useStorage<any>('currentLibraryFilter', undefined, 'local')
 const items = ref<MediaItem[]>([])
 const isLoading = ref(false)
 const pageSize = 20
@@ -61,7 +60,11 @@ const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
 onMounted(async () => {
   const libraryFilters = (await ApiClient.getCapabilities()).libraryFilters
   filters.value = libraryFilters ? libraryFilters : []
-  musicFilter.value = libraryFilters ? libraryFilters[0] : {}
+
+  if (!musicFilter.value) {
+    musicFilter.value = libraryFilters ? libraryFilters[0] : {}
+  }
+
   ready.value = true
   //handleLoadMore({ offset: 0, limit: pageSize, done: () => {} })
 })
@@ -81,7 +84,7 @@ const handleSelect = async (item: MediaItem) => {
 }
 
 const handleFilter = async (filter: any) => {
-  musicFilter.set (filter)
+  musicFilter.set(filter)
   items.value = []
   //  handleLoadMore({ offset: 0, limit: pageSize, done: () => {} });
 }

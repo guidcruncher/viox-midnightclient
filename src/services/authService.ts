@@ -1,4 +1,5 @@
 import { getBaseUrl } from '../utils/baseUrl'
+import { ApiClient } from '@/api'
 
 class AuthService {
   isLoggedIn(): boolean {
@@ -7,6 +8,15 @@ class AuthService {
 
   logout() {
     localStorage.removeItem('access_token')
+  }
+
+  async refreshToken() {
+    const res = await ApiClient.getToken()
+    if (res.status === 200 && res.data) {
+      localStorage.setItem('access_token', res.data)
+    } else {
+      this.logout()
+    }
   }
 
   getLoginUrl(): string {

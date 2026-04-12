@@ -1,13 +1,9 @@
-import { shallowRef, watch, type ShallowRef } from "vue"
+import { shallowRef, watch, type ShallowRef } from 'vue'
 
-type StorageType = "local" | "session"
+type StorageType = 'local' | 'session'
 
-export function useStorage<T>(
-  key: string,
-  defaultValue: T,
-  type: StorageType = "local"
-) {
-  const storage = type === "local" ? localStorage : sessionStorage
+export function useStorage<T>(key: string, defaultValue: T, type: StorageType = 'local') {
+  const storage = type === 'local' ? localStorage : sessionStorage
 
   const load = (): T => {
     const raw = storage.getItem(key)

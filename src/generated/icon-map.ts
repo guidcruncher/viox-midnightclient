@@ -32,7 +32,7 @@ import {
   Volume1,
   Volume2,
   VolumeX,
-  X
+  X,
 } from 'lucide-vue-next'
 
 export const iconMap = {
