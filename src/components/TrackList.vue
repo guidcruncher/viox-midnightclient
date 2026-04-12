@@ -158,7 +158,8 @@ onUnmounted(() => {
               class="p-4 glass rounded-xl hover:bg-white/10 transition-all text-white border-white/10"
               @click="$emit('favourite', props.parent)"
             >
-              <LucideIcon name="Heart" size="20" />
+              <LucideIcon v-if="!props.parent.library" name="Heart" size="20" />
+              <LucideIcon v-else name="Heart-Off" size="20" />
             </button>
           </div>
         </div>
