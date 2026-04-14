@@ -1,0 +1,91 @@
+// types.ts
+
+export type SuccessResponse = { ok: boolean }
+
+export type SuccessTrackResponse = { ok: boolean; track: MediaItem }
+
+export type AudioSource = 'spotify' | 'podverse' | 'radiobrowser' | 'tunein' | 'youtube' | 'local'
+
+export type AudioSourceItemType =
+  | 'playlist'
+  | 'folder'
+  | 'track'
+  | 'album'
+  | 'episode'
+  | 'show'
+  | 'podcast'
+  | 'station'
+  | 'metadata'
+
+export interface MediaSourceRef {
+  source: AudioSource
+  itemType: AudioSourceItemType
+  sourceId: string
+  parentSourceId?: string
+  uri?: string
+}
+
+export interface MediaItem {
+  id: string
+  sourceRef: MediaSourceRef
+  title: string
+  subtitle?: string
+  artist?: string
+  album?: string
+  imageUrl?: string
+  durationMs?: number
+  isLive?: boolean
+  description?: string
+  releaseDate?: string
+  explicit?: boolean
+  library?: boolean
+}
+
+export interface Playlist {
+  id: string // internal VIOX ID
+  name: string
+  description?: string
+  imageUrl?: string
+
+  source: 'local' | 'spotify'
+  sourceId?: string // spotify playlist ID
+  sourceUri?: string // spotify:playlist:xxx
+
+  totalItems: number
+  library?: boolean
+}
+
+export interface PlaylistMetadata {
+  id: string
+  sourceRef: MediaSourceRef
+  name: string
+  description?: string
+  imageUrl?: string
+  ownerName?: string
+  totalItems: number
+}
+
+export type PlaybackErrorCode =
+  | 'UNAVAILABLE'
+  | 'NOT_AUTHORIZED'
+  | 'NETWORK'
+  | 'BACKEND_ERROR'
+  | 'UNSUPPORTED_FORMAT'
+
+export interface PlaybackError {
+  code: PlaybackErrorCode
+  message: string
+  cause?: Record<string, unknown>
+}
+
+export type PlaybackState =
+  | { type: 'idle' }
+  | { type: 'loading'; item: MediaItem }
+  | { type: 'playing'; item: MediaItem; positionMs: number }
+  | { type: 'paused'; item: MediaItem; positionMs: number }
+  | { type: 'ended'; item: MediaItem }
+  | { type: 'error'; error: PlaybackError }
+
+export interface ConfigFile {
+  version: string
+}
