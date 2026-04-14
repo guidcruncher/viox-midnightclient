@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 import BackgroundEffects from '../components/BackgroundEffects.vue'
 import HeaderBar from '../components/HeaderBar.vue'
@@ -24,8 +24,6 @@ const toast = ref<toastSetting>({
 
 const { showFullPlayer } = usePlayer()
 const cleanUI = ref<boolean>(false)
-
-onMounted(async () => {})
 </script>
 
 <template>

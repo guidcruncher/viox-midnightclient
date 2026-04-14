@@ -1,45 +1,18 @@
-// types.ts
+// Re-export shared types from the canonical source
+export type {
+  AudioSource,
+  AudioSourceItemType,
+  MediaSourceRef,
+  MediaItem,
+} from '../types'
+
+import type { MediaItem, MediaSourceRef } from '../types'
+
+// API-specific types
 
 export type SuccessResponse = { ok: boolean }
 
 export type SuccessTrackResponse = { ok: boolean; track: MediaItem }
-
-export type AudioSource = 'spotify' | 'podverse' | 'radiobrowser' | 'tunein' | 'youtube' | 'local'
-
-export type AudioSourceItemType =
-  | 'playlist'
-  | 'folder'
-  | 'track'
-  | 'album'
-  | 'episode'
-  | 'show'
-  | 'podcast'
-  | 'station'
-  | 'metadata'
-
-export interface MediaSourceRef {
-  source: AudioSource
-  itemType: AudioSourceItemType
-  sourceId: string
-  parentSourceId?: string
-  uri?: string
-}
-
-export interface MediaItem {
-  id: string
-  sourceRef: MediaSourceRef
-  title: string
-  subtitle?: string
-  artist?: string
-  album?: string
-  imageUrl?: string
-  durationMs?: number
-  isLive?: boolean
-  description?: string
-  releaseDate?: string
-  explicit?: boolean
-  library?: boolean
-}
 
 export interface Playlist {
   id: string // internal VIOX ID

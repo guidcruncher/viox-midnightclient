@@ -24,12 +24,12 @@ const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
   if (isLoading.value) return
   isLoading.value = true
   try {
-    if (offset == 0) items.value = [] // Clear items on initial load or filter change
+    if (offset === 0) items.value = [] // Clear items on initial load or filter change
 
     const response = (await ApiClient.getItems(albumId.value, offset, limit)).data
 
     items.value.push(...response)
-    const moreAvailable = response.length != 0
+    const moreAvailable = response.length !== 0
     done(moreAvailable)
   } catch (error) {
     console.error('Failed to load items:', error)

@@ -29,7 +29,7 @@ const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
   if (isLoading.value) return
   isLoading.value = true
   try {
-    if (offset == 0) items.value = [] // Clear items on initial load or filter change
+    if (offset === 0) items.value = [] // Clear items on initial load or filter change
 
     let response
 
@@ -46,7 +46,7 @@ const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
     }
 
     items.value.push(...response)
-    const moreAvailable = response.length != 0
+    const moreAvailable = response.length !== 0
     done(moreAvailable)
   } catch (error) {
     console.error('Failed to load items:', error)
@@ -95,7 +95,7 @@ const handleFilter = async (filter: any) => {
     <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
       <button
         v-for="filter in filters"
-        :key="filter"
+        :key="filter.name"
         @click="handleFilter(filter)"
         class="whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-medium transition-colors"
         :class="

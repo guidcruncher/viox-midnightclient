@@ -33,9 +33,9 @@ const handleClick = (button: any) => {
         :key="button.key"
         @click="handleClick(button)"
         class="toolbar-item"
-        :class="button.key == active ? 'toolbar-item-active' : 'toolbar-item-ipnactive'"
+        :class="button.key === active ? 'toolbar-item-active' : 'toolbar-item-inactive'"
       >
-        <LucideIcon v-if="button.icon" name="button.icon" />
+        <LucideIcon v-if="button.icon" :name="button.icon" />
         {{ button.label }}
       </button>
     </div>

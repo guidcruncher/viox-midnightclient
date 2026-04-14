@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { MediaItem } from '../types'
 
-import { Trash2, MoreHorizontal, Plus } from 'lucide-vue-next'
 import { onMounted, ref } from 'vue'
 
 import { ApiClient } from '@/api'
@@ -13,15 +12,22 @@ const { currentTrack } = usePlayer()
 const tracks = ref<MediaItem[]>([])
 const ready = ref(false)
 
+const formatDuration = (ms?: number): string => {
+  if (!ms) return '--:--'
+  const totalSeconds = Math.floor(ms / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`
+}
+
 const isPlaying = (track: MediaItem) => {
   if (!currentTrack.value) return false
-  return currentTrack.value.id == track.id
+  return currentTrack.value.id === track.id
 }
 
 const clearQueue = async () => {
   ready.value = false
   await ApiClient.clearQueue(true)
-  tracks.value = await ApiClient.getQueue()
   tracks.value = []
   ready.value = true
 }
@@ -54,7 +60,7 @@ onMounted(async () => {
         class="glass p-2 rounded-full text-viox-ice/60 hover:text-viox-electric transition-colors"
         title="Clear Queue"
       >
-        <Trash2 :size="20" />
+        <LucideIcon name="Trash2" :size="20" />
       </button>
     </div>
 
@@ -104,7 +110,7 @@ onMounted(async () => {
             @click.stop="selectTrack(track.id)"
             class="opacity-0 group-hover:opacity-100 p-2 text-viox-lilac/40 hover:text-viox-electric transition-all"
           >
-            <MoreHorizontal :size="18" />
+            <LucideIcon name="MoreHorizontal" :size="18" />
           </button>
 
           <div
@@ -114,7 +120,7 @@ onMounted(async () => {
             PLAYING
           </div>
           <div v-else class="text-viox-lilac/30 font-mono text-xs tabular-nums pr-2">
-            {{ track.durationMs }}
+            {{ formatDuration(track.durationMs) }}
           </div>
         </div>
       </div>
@@ -135,7 +141,7 @@ onMounted(async () => {
       <button
         class="flex-1 bg-viox-electric/20 border border-viox-electric/40 py-3 px-4 rounded-xl text-xs font-display font-bold text-viox-electric hover:bg-viox-electric/30 transition-all uppercase tracking-widest shadow-glow-electric flex items-center justify-center gap-2"
       >
-        <Plus :size="14" />
+        <LucideIcon name="Plus" :size="14" />
         Add Track
       </button>
     </div>

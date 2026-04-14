@@ -15,9 +15,12 @@ defineEmits<{
 </script>
 
 <template>
-  <button
+  <div
+    role="button"
+    tabindex="0"
     @click.stop="$emit('click', item)"
-    class="group relative aspect-square w-[125px] md:w-[200px] overflow-hidden rounded-3xl border transition-all duration-300 ease-out active:scale-95 touch-manipulation text-left"
+    @keydown.enter.stop="$emit('click', item)"
+    class="group relative aspect-square w-[125px] md:w-[200px] overflow-hidden rounded-3xl border transition-all duration-300 ease-out active:scale-95 touch-manipulation text-left cursor-pointer"
     :class="
       active
         ? 'border-cyan-400/50 bg-cyan-900/20 shadow-[0_0_30px_rgba(34,211,238,0.2)]'
@@ -26,8 +29,8 @@ defineEmits<{
   >
     <button
       v-if="
-        item.sourceRef.itemType != 'metadata' &&
-        item.sourceRef.itemType != 'folder'
+        item.sourceRef.itemType !== 'metadata' &&
+        item.sourceRef.itemType !== 'folder'
       "
       @click.stop="$emit('add', item)"
       class="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-white hover:bg-black/80 transition"
@@ -71,5 +74,5 @@ defineEmits<{
       <div class="mx-[2px] h-5 w-3 animate-pulse rounded-[1px] bg-black"></div>
       <div class="h-2 w-3 animate-pulse rounded-[1px] bg-black"></div>
     </div>
-  </button>
+  </div>
 </template>

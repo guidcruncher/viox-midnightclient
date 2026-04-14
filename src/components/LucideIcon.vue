@@ -13,7 +13,7 @@ const props = defineProps<{
 
 const sizeNum = computed(() => {
   if (!props.size) return 20
-  if (props.size == '') return 20
+  if (props.size === '') return 20
   return parseInt(String(props.size))
 })
 

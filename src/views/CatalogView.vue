@@ -25,7 +25,7 @@ const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
   if (isLoading.value) return
   isLoading.value = true
   try {
-    if (offset == 0) items.value = [] // Clear items on initial load or filter ch,ange
+    if (offset === 0) items.value = [] // Clear items on initial load or filter change
     const categoryId = parentItem.value
       ? parentItem.value.sourceRef.sourceId
       : source.value.sourceId
@@ -34,7 +34,7 @@ const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
       .data
 
     items.value.push(...response)
-    const moreAvailable = response.length != 0
+    const moreAvailable = response.length !== 0
     done(moreAvailable)
   } catch (error) {
     console.error('Failed to load items:', error)
@@ -82,7 +82,7 @@ const handleSelect = async (item: any) => {
 }
 
 const handleAdd = async (item: any) => {
-  if (item.sourceRef.itemType != 'metadata' && item.sourceRef.itemType != 'folder') {
+  if (item.sourceRef.itemType !== 'metadata' && item.sourceRef.itemType !== 'folder') {
     await ApiClient.addToLibrary(item.id)
   }
 }
@@ -108,7 +108,7 @@ const handleFilter = async (item: any) => {
     <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
       <button
         v-for="filter in sources"
-        :key="filter"
+        :key="filter.id"
         @click="handleFilter(filter)"
         class="whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-medium transition-colors"
         :class="

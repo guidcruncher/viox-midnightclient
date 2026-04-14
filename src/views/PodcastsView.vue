@@ -21,7 +21,7 @@ const pageSize = 20
 const ready = ref(false)
 
 const handleAdd = async (item: any) => {
-  if (item.sourceRef.itemType != 'metadata' && item.sourceRef.itemType != 'folder') {
+  if (item.sourceRef.itemType !== 'metadata' && item.sourceRef.itemType !== 'folder') {
     await ApiClient.addToLibrary(item.id)
   }
 }
@@ -34,14 +34,14 @@ const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
   if (isLoading.value) return
   isLoading.value = true
   try {
-    if (offset == 0) items.value = [] // Clear items on initial load or filter change
+    if (offset === 0) items.value = [] // Clear items on initial load or filter change
 
     const response = (
       await ApiClient.getPodverseItems(parentItem.value?.id, offset, limit, query.value)
     ).data
 
     items.value.push(...response)
-    const moreAvailable = response.length != 0
+    const moreAvailable = response.length !== 0
     done(moreAvailable)
   } catch (error) {
     console.error('Failed to load items:', error)
@@ -58,7 +58,7 @@ onMounted(async () => {
 })
 
 const handleSelect = async (item: MediaItem) => {
-  if (item.sourceRef.itemType == 'folder') {
+  if (item.sourceRef.itemType === 'folder') {
     parentItem.value = item
     items.value = []
   } else {

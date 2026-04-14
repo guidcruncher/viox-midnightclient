@@ -118,7 +118,7 @@ export class VIOXApi {
   }
 
   unsubscribe(id: string): Promise<AxiosResponse<any>> {
-    return this.http.post(`/api/subscribe/${encodeURIComponent(id)}`)
+    return this.http.post(`/api/podcast/unsubscribe/${encodeURIComponent(id)}`)
   }
 
   getLibraryItem(id: string): Promise<AxiosResponse<MediaItem>> {
@@ -185,14 +185,14 @@ export class VIOXApi {
   }
 
   setSpeakerVolume(id: string, volume: number): Promise<AxiosResponse<SuccessResponse>> {
-    if (id && volume) {
+    if (id && typeof volume === 'number') {
       return this.http.post(`/api/speaker/volume/${encodeURIComponent(id)}`, { volume: volume })
     }
     throw new Error('id or volume is undefined')
   }
 
   setAllSpeakerVolume(volume: number): Promise<AxiosResponse<SuccessResponse>> {
-    if (volume) {
+    if (typeof volume === 'number') {
       return this.http.post(`/api/speakers/volume`, { volume: volume })
     }
     throw new Error('volume is undefined')
@@ -224,9 +224,9 @@ export class VIOXApi {
 
   getStreamUrl(format?: 'aac' | 'mp3' | 'mp4'): string {
     if (format) {
-      return `${this.baseURL}'/api/stream?format=${encodeURIComponent(format)}`
+      return `${this.baseURL}/api/stream?format=${encodeURIComponent(format)}`
     }
-    return `${this.baseURL}'/api/stream`
+    return `${this.baseURL}/api/stream`
   }
 
   /* ---------------------- Version ---------------------- */
@@ -243,7 +243,7 @@ export class VIOXApi {
     })
   }
 
-  async getRadioSources(): Promise<any[]> {
+  getRadioSources(): Promise<AxiosResponse<any[]>> {
     return this.http.get('/api/radio')
   }
 
@@ -269,7 +269,7 @@ export class VIOXApi {
     limit?: number,
     query?: string
   ): Promise<AxiosResponse<MediaItem[]>> {
-    if (query && query != '') {
+    if (query && query !== '') {
       return this.http.get(`/api/search/${source}`, {
         params: { query, offset, limit },
       })
@@ -290,7 +290,7 @@ export class VIOXApi {
     limit?: number,
     query?: string
   ): Promise<AxiosResponse<MediaItem[]>> {
-    if (query && query != '') {
+    if (query && query !== '') {
       return this.http.get(`/api/search/local`, {
         params: { id, offset, limit, query },
       })
@@ -307,7 +307,7 @@ export class VIOXApi {
     limit?: number,
     query?: string
   ): Promise<AxiosResponse<MediaItem[]>> {
-    if (query && query != '') {
+    if (query && query !== '') {
       return this.http.get(`/api/search/podverse`, {
         params: { id, offset, limit, query },
       })
