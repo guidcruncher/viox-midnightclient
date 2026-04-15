@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import BackgroundEffects from '../components/BackgroundEffects.vue'
-import HeaderBar from '../components/HeaderBar.vue'
-import PlayerFullscreen from '../components/PlayerFullscreen.vue'
-import PlayerMini from '../components/PlayerMini.vue'
-import SidebarNav from '../components/SidebarNav.vue'
 import { usePlayer } from '../composables/usePlayer'
 
 interface toastSetting {

@@ -86,8 +86,6 @@ import { ref, onMounted } from 'vue'
 
 import { ApiClient } from '@/api'
 
-import EqualizerPanel from '../components/EqualizerPanel.vue'
-import HorizontalSlider from '../components/HorizontalSlider.vue'
 import { useAudioSettings } from '../composables/useAudioSettings'
 
 const { volume, updateVolume, eq, resetSettings, setEqPreset } = useAudioSettings()
