@@ -74,6 +74,19 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'sound',
+        name: 'sound',
+        component: SoundSettings,
+        meta: {
+          title: 'Sound',
+          sidebar: {
+            icon: 'Speaker',
+            label: 'Sound',
+            order: 5,
+          },
+        },
+      },
+      {
         path: 'podcast',
         name: 'podcast',
         component: PodcastView,
@@ -90,12 +103,6 @@ const routes: RouteRecordRaw[] = [
         name: 'playlist',
         component: PlaylistView,
         meta: { title: 'Playlist' },
-      },
-      {
-        path: 'sound',
-        name: 'sound',
-        component: SoundSettings,
-        meta: { title: 'Sound Desk' },
       },
     ],
   },
