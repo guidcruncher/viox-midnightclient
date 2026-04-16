@@ -57,25 +57,26 @@ onMounted(async () => {
   <div class="w-full animate-slide-up relative">
     <!-- Queue Header -->
     <div class="flex items-center justify-between mb-6 px-2">
-      <div>
-        <h3 class="font-display text-xs uppercase tracking-[0.2em] text-viox-lilac/60 font-bold">
-          Up Next
-        </h3>
-      </div>
-      <button
-        @click.stop="selectTrack(tracks[0])"
-        class="p-2 text-viox-lilac/40 hover:text-viox-electric transition-all"
-      >
-        <LucideIcon name="Play" :size="18" />
-      </button>
+      <h3 class="font-display text-xs uppercase tracking-[0.2em] text-viox-lilac/60 font-bold">
+        Up Next
+      </h3>
 
-      <button
-        @click="clearQueue"
-        class="glass p-2 rounded-full text-viox-ice/60 hover:text-viox-electric transition-colors"
-        title="Clear Queue"
-      >
-        <LucideIcon name="Trash2" :size="20" />
-      </button>
+      <div class="flex items-center gap-3">
+        <button
+          @click.stop="selectTrack(tracks[0])"
+          class="p-2 text-viox-lilac/40 hover:text-viox-electric transition-all"
+        >
+          <LucideIcon name="Play" :size="18" />
+        </button>
+
+        <button
+          @click="clearQueue"
+          class="glass p-2 rounded-full text-viox-ice/60 hover:text-viox-electric transition-colors"
+          title="Clear Queue"
+        >
+          <LucideIcon name="Trash2" :size="20" />
+        </button>
+      </div>
     </div>
 
     <!-- Scrollable List -->
@@ -151,19 +152,7 @@ onMounted(async () => {
     </div>
 
     <!-- Footer Controls -->
-    <div class="mt-6 flex gap-3">
-      <button
-        class="flex-1 glass py-3 px-4 rounded-xl text-xs font-display font-bold text-viox-ice/80 hover:bg-white/10 transition-all uppercase tracking-widest"
-      >
-        History
-      </button>
-      <button
-        class="flex-1 bg-viox-electric/20 border border-viox-electric/40 py-3 px-4 rounded-xl text-xs font-display font-bold text-viox-electric hover:bg-viox-electric/30 transition-all uppercase tracking-widest shadow-glow-electric flex items-center justify-center gap-2"
-      >
-        <LucideIcon name="Plus" :size="14" />
-        Add Track
-      </button>
-    </div>
+    <div class="mt-6 flex gap-3"></div>
   </div>
 </template>
 
