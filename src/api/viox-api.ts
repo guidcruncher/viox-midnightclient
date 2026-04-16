@@ -89,6 +89,10 @@ export class VIOXApi {
     return res.data
   }
 
+  async deleteTrackInQueue(id: string): Promise<AxiosResponse<any>> {
+    return this.http.delete(`/api/queue/delete/${encodeURIComponent(id)}`)
+  }
+
   async selectTrackInQueue(id: string): Promise<MediaItem | undefined> {
     const res = await this.http.post(`/api/queue/${encodeURIComponent(id)}`)
     if (!res.data) return undefined

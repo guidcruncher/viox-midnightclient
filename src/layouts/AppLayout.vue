@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import BackgroundEffects from '../components/BackgroundEffects.vue'
-import HeaderBar from '../components/HeaderBar.vue'
-import PlayerFullscreen from '../components/PlayerFullscreen.vue'
-import PlayerMini from '../components/PlayerMini.vue'
-import SidebarNav from '../components/SidebarNav.vue'
 import { usePlayer } from '../composables/usePlayer'
 
 interface toastSetting {
@@ -41,8 +36,6 @@ const cleanUI = ref<boolean>(false)
       class="relative order-1 flex-1 overflow-y-auto overflow-x-hidden p-4 scrollbar-hide z-10 md:order-2 md:p-8"
     >
       <div class="mx-auto max-w-7xl pb-32">
-        <HeaderBar v-if="!cleanUI" />
-
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />

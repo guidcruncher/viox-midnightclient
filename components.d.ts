@@ -27,7 +27,6 @@ declare module 'vue' {
     OverlayPanel: typeof import('./src/components/OverlayPanel.vue')['default']
     PagedList: typeof import('./src/components/PagedList.vue')['default']
     PagedSquareCardList: typeof import('./src/components/PagedSquareCardList.vue')['default']
-    PlaybackQueue: typeof import('./src/components/PlaybackQueue.vue')['default']
     PlayerArtwork: typeof import('./src/components/PlayerArtwork.vue')['default']
     PlayerArtworkMini: typeof import('./src/components/PlayerArtworkMini.vue')['default']
     PlayerControls: typeof import('./src/components/PlayerControls.vue')['default']
