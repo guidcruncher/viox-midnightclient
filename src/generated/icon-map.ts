@@ -21,7 +21,6 @@ import {
   MoreHorizontal,
   Pause,
   Play,
-  Plus,
   Podcast,
   Radio,
   Search,
@@ -37,7 +36,7 @@ import {
   Volume1,
   Volume2,
   VolumeX,
-  X,
+  X
 } from 'lucide-vue-next'
 
 export const iconMap = {
@@ -62,7 +61,6 @@ export const iconMap = {
   MoreHorizontal,
   Pause,
   Play,
-  Plus,
   Podcast,
   Radio,
   Search,
