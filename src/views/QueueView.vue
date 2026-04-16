@@ -81,7 +81,7 @@ onMounted(async () => {
     <!-- Scrollable List -->
     <div v-if="ready" class="space-y-3 max-h-[60vh] overflow-y-auto scrollbar-viox pr-1">
       <div
-        v-for="track in tracks"
+        v-for="(track, index) in tracks"
         :key="track.id"
         class="glass p-3 rounded-2xl flex items-center gap-4 transition-all hover:bg-white/5 cursor-pointer group active:scale-[0.98]"
         :class="{ 'border-viox-electric/30 active-glow': isPlaying(track) }"
@@ -126,7 +126,7 @@ onMounted(async () => {
             <LucideIcon name="Play" :size="18" />
           </button>
           <button
-            @click.stop="deleteTrack(track.id)"
+            @click.stop="deleteTrack(index)"
             class="p-2 text-viox-lilac/40 hover:text-viox-electric transition-all"
           >
             <LucideIcon name="Trash2" :size="18" />
