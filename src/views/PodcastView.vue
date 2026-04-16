@@ -1,69 +1,74 @@
 <script setup lang="ts">
-import type { MediaItem } from '../types'
+import type { MediaItem } from "../types";
 
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
-import { ApiClient } from '@/api'
-import { getQueryString } from '@/utils/getQueryString'
+import { ApiClient } from "@/api";
+import { getQueryString } from "@/utils/getQueryString";
 
 interface LoadMoreEvent {
-  offset: number
-  limit: number
-  done: (moreAvailable: boolean) => void
+  offset: number;
+  limit: number;
+  done: (moreAvailable: boolean) => void;
 }
 
-const items = ref<MediaItem[]>([])
-const isLoading = ref(false)
-const podcastId = ref('')
-const podcast = ref<MediaItem | undefined>(undefined)
-const pageSize = 20
-const ready = ref(false)
+const items = ref<MediaItem[]>([]);
+const isLoading = ref(false);
+const podcastId = ref("");
+const podcast = ref<MediaItem | undefined>(undefined);
+const pageSize = 20;
+const ready = ref(false);
 
 const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
-  if (isLoading.value) return
-  isLoading.value = true
+  if (isLoading.value) return;
+  isLoading.value = true;
   try {
-    if (offset === 0) items.value = [] // Clear items on initial load or filter change
+    if (offset === 0) items.value = []; // Clear items on initial load or filter change
 
-    const response = (await ApiClient.getItems(podcastId.value, offset, limit)).data
+    const response = (await ApiClient.getItems(podcastId.value, offset, limit)).data;
 
-    items.value.push(...response)
-    const moreAvailable = response.length !== 0
-    done(moreAvailable)
+    items.value.push(...response);
+    const moreAvailable = response.length !== 0;
+    done(moreAvailable);
   } catch (error) {
-    console.error('Failed to load items:', error)
-    done(false) // Stop observing on error
+    console.error("Failed to load items:", error);
+    done(false); // Stop observing on error
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 // Initial fetch
 onMounted(async () => {
-  const route = useRoute()
-  podcastId.value = getQueryString(route.query.id)
-  podcast.value = (await ApiClient.getLibraryItem(podcastId.value)).data
+  const route = useRoute();
+  podcastId.value = getQueryString(route.query.id);
+  podcast.value = (await ApiClient.getLibraryItem(podcastId.value)).data;
   //  handleLoadMore({ offset: 0, limit: pageSize, done: () => {} })
-  ready.value = true
-})
+  ready.value = true;
+});
 
 const handleSubscribe = async () => {
   if (podcast.value?.subscribed) {
-    await ApiClient.unsubscribe(podcastId.value)
+    await ApiClient.unsubscribe(podcastId.value);
   } else {
-    await ApiClient.subscribe(podcastId.value)
+    await ApiClient.subscribe(podcastId.value);
   }
-  podcast.value = (await ApiClient.getLibraryItem(podcastId.value)).data
-}
+  podcast.value = (await ApiClient.getLibraryItem(podcastId.value)).data;
+};
 
-const handleAdd = async () => {
-  await ApiClient.addToLibrary(podcastId.value)
-}
+const handleAdd = async (item: any) => {
+  if (item.library) {
+    await ApiClient.removeFromLibrary(item.id);
+  } else {
+    await ApiClient.addToLibrary(podcastId.value);
+  }
+  podcast.value = (await ApiClient.getLibraryItem(podcastId.value)).data;
+};
 
 const handlePlayAll = async () => {
-  await ApiClient.play(podcastId.value)
-}
+  await ApiClient.play(podcastId.value);
+};
 </script>
 
 <template>

@@ -133,6 +133,10 @@ export class VIOXApi {
     return this.http.post(`/api/library/${encodeURIComponent(id)}`)
   }
 
+  removeFromLibrary(id: string): Promise<AxiosResponse<MediaItem | undefined>> {
+    return this.http.delete(`/api/library/${encodeURIComponent(id)}`)
+  }
+
   /* ---------------------- Playlists ---------------------- */
   getPlaylists(offset?: number, limit?: number): Promise<AxiosResponse<MediaItem[]>> {
     return this.http.get('/api/playlists', { params: { offset, limit } })

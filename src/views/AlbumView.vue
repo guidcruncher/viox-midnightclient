@@ -48,9 +48,14 @@ onMounted(async () => {
   ready.value = true
 })
 
-const handleAdd = async () => {
-  await ApiClient.addToLibrary(albumId.value)
-}
+const handleAdd = async (item:any) => {
+  if (item.library) {
+    await ApiClient.removeFromLibrary(item.id);
+  } else {
+    await ApiClient.addToLibrary(item.id);
+  }
+  album.value = (await ApiClient.getLibraryItem(albumId.value)).data;
+};
 
 const handlePlayAll = async () => {
   await ApiClient.play(albumId.value)
