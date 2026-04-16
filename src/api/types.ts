@@ -1,10 +1,5 @@
 // Re-export shared types from the canonical source
-export type {
-  AudioSource,
-  AudioSourceItemType,
-  MediaSourceRef,
-  MediaItem,
-} from '../types'
+export type { AudioSource, AudioSourceItemType, MediaSourceRef, MediaItem } from '../types'
 
 import type { MediaItem, MediaSourceRef } from '../types'
 

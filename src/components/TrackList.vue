@@ -1,110 +1,110 @@
 <script setup lang="ts">
-import type { MediaItem } from "../types";
+import type { MediaItem } from '../types'
 
-import { ref, onMounted, onUnmounted, nextTick, watch } from "vue";
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 
-import { usePlayer } from "../composables/usePlayer";
+import { usePlayer } from '../composables/usePlayer'
 
 interface Props {
-  parent: MediaItem;
-  tracks: MediaItem[];
-  loading: boolean;
-  pageSize: number;
+  parent: MediaItem
+  tracks: MediaItem[]
+  loading: boolean
+  pageSize: number
 }
 
-const props = defineProps<Props>();
-const emit = defineEmits(["load-more", "playall", "favourite", "click", "subscribe"]);
+const props = defineProps<Props>()
+const emit = defineEmits(['load-more', 'playall', 'favourite', 'click', 'subscribe'])
 
-const { currentTrack, playItem } = usePlayer();
+const { currentTrack, playItem } = usePlayer()
 
-const observerTarget = ref<HTMLElement | null>(null);
-const hasMore = ref(true);
-const currentPage = ref(1);
-const canSubscribe = ref(false);
+const observerTarget = ref<HTMLElement | null>(null)
+const hasMore = ref(true)
+const currentPage = ref(1)
+const canSubscribe = ref(false)
 
-let observer: IntersectionObserver | null = null;
+let observer: IntersectionObserver | null = null
 
 const triggerLoad = () => {
-  if (props.loading || !hasMore.value) return;
+  if (props.loading || !hasMore.value) return
 
-  const offset = (currentPage.value - 1) * props.pageSize;
+  const offset = (currentPage.value - 1) * props.pageSize
 
-  emit("load-more", {
+  emit('load-more', {
     offset,
     limit: props.pageSize,
     done: (moreAvailable: boolean) => {
-      hasMore.value = moreAvailable;
+      hasMore.value = moreAvailable
       if (moreAvailable) {
-        currentPage.value++;
+        currentPage.value++
       }
     },
-  });
-};
+  })
+}
 
 // CRITICAL: Reset internal state if the parent empties the list
 watch(
   () => props.tracks.length,
   (newLen) => {
     if (newLen === 0) {
-      currentPage.value = 1;
-      hasMore.value = true;
+      currentPage.value = 1
+      hasMore.value = true
       // Re-check visibility after the DOM clears
-      nextTick(() => triggerLoad());
+      nextTick(() => triggerLoad())
     }
   }
-);
+)
 
 const handleTrackSelect = async (track: any) => {
   if (props.parent) {
-    await playItem(track, props.parent.sourceRef.sourceId);
-    emit("click", track);
+    await playItem(track, props.parent.sourceRef.sourceId)
+    emit('click', track)
   }
-};
+}
 
 const handlePlayAll = async () => {
   if (props.parent) {
-    await playItem(props.parent);
-    emit("playall", props.parent);
+    await playItem(props.parent)
+    emit('playall', props.parent)
   }
-};
+}
 
 const formatDuration = (durationMs: number | undefined) => {
-  if (!durationMs) return "";
-  const minutes = Math.floor(durationMs / 60000);
-  const seconds = Math.floor((durationMs % 60000) / 1000);
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-};
+  if (!durationMs) return ''
+  const minutes = Math.floor(durationMs / 60000)
+  const seconds = Math.floor((durationMs % 60000) / 1000)
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`
+}
 
 onMounted(async () => {
-  await nextTick();
+  await nextTick()
 
   observer = new IntersectionObserver(
     (entries) => {
       if (entries[0].isIntersecting) {
-        triggerLoad();
+        triggerLoad()
       }
     },
-    { rootMargin: "300px", threshold: 0.01 }
-  );
+    { rootMargin: '300px', threshold: 0.01 }
+  )
 
-  if (observerTarget.value) observer.observe(observerTarget.value);
+  if (observerTarget.value) observer.observe(observerTarget.value)
 
   // Initial Fetch
-  if (props.tracks.length === 0) triggerLoad();
+  if (props.tracks.length === 0) triggerLoad()
 
   if (props.parent) {
     if (
-      props.parent.sourceRef.itemType === "podcast" ||
-      props.parent.sourceRef.itemType === "show"
+      props.parent.sourceRef.itemType === 'podcast' ||
+      props.parent.sourceRef.itemType === 'show'
     ) {
-      canSubscribe.value = true;
+      canSubscribe.value = true
     }
   }
-});
+})
 
 onUnmounted(() => {
-  observer?.disconnect();
-});
+  observer?.disconnect()
+})
 </script>
 
 <template>
@@ -131,11 +131,7 @@ onUnmounted(() => {
               @click="handlePlayAll"
               class="w-20 h-20 bg-[#8A2BE2] rounded-full flex items-center justify-center shadow-glow-electric animate-float"
             >
-              <LucideIcon
-                name="Play"
-                size="36"
-                class="translate-x-1 fill-white text-white"
-              />
+              <LucideIcon name="Play" size="36" class="translate-x-1 fill-white text-white" />
             </button>
           </div>
         </div>
@@ -157,15 +153,11 @@ onUnmounted(() => {
             >
               {{ props.parent.artist }}
             </span>
-            <span
-              class="w-1.5 h-1.5 bg-[#8A2BE2] rounded-full shadow-[0_0_5px_#8A2BE2]"
-            ></span>
+            <span class="w-1.5 h-1.5 bg-[#8A2BE2] rounded-full shadow-[0_0_5px_#8A2BE2]"></span>
             <span class="text-white/60">{{ props.parent.releaseDate }}</span>
           </div>
 
-          <div
-            class="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-4"
-          >
+          <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-4">
             <button
               class="px-10 py-4 bg-[#8A2BE2] text-white font-black rounded-xl shadow-[0_0_30px_rgba(138,43,226,0.5)] hover:shadow-[0_0_40px_rgba(138,43,226,0.7)] hover:-translate-y-1 active:translate-y-0 transition-all flex items-center gap-3"
               @click="handlePlayAll"
@@ -239,12 +231,10 @@ onUnmounted(() => {
                 <span
                   :class="[
                     'font-mono text-sm group-hover:hidden',
-                    currentTrack?.id === track.id
-                      ? 'text-[#A0DFFF]'
-                      : 'text-[#C8A2C8]/30',
+                    currentTrack?.id === track.id ? 'text-[#A0DFFF]' : 'text-[#C8A2C8]/30',
                   ]"
                 >
-                  {{ String(idx + 1).padStart(2, "0") }}
+                  {{ String(idx + 1).padStart(2, '0') }}
                 </span>
 
                 <LucideIcon
@@ -252,9 +242,7 @@ onUnmounted(() => {
                   size="16"
                   :class="[
                     'hidden group-hover:block mx-auto',
-                    currentTrack?.id === track.id
-                      ? 'text-[#A0DFFF] fill-current'
-                      : 'text-white',
+                    currentTrack?.id === track.id ? 'text-[#A0DFFF] fill-current' : 'text-white',
                   ]"
                 />
               </template>
@@ -271,10 +259,9 @@ onUnmounted(() => {
               >
                 {{ track.title }}
               </span>
-              <span
-                class="text-xs font-medium text-[#C8A2C8]/60 uppercase tracking-widest"
-                >{{ track.artist }}</span
-              >
+              <span class="text-xs font-medium text-[#C8A2C8]/60 uppercase tracking-widest">{{
+                track.artist
+              }}</span>
             </div>
 
             <div class="hidden sm:flex items-center justify-end pr-10">

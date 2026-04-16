@@ -1,17 +1,17 @@
 <script setup lang="ts">
 defineProps<{
-  active?: boolean;
-  item: any;
-  imageUrl?: string;
-  itemType: string;
-  title: string;
-  subtitle?: string;
-}>();
+  active?: boolean
+  item: any
+  imageUrl?: string
+  itemType: string
+  title: string
+  subtitle?: string
+}>()
 
 defineEmits<{
-  (e: "click", item: any): void;
-  (e: "add", item: any): void;
-}>();
+  (e: 'click', item: any): void
+  (e: 'add', item: any): void
+}>()
 </script>
 
 <template>
@@ -28,10 +28,7 @@ defineEmits<{
     "
   >
     <button
-      v-if="
-        item.sourceRef.itemType !== 'metadata' &&
-        item.sourceRef.itemType !== 'folder'
-      "
+      v-if="item.sourceRef.itemType !== 'metadata' && item.sourceRef.itemType !== 'folder'"
       @click.stop="$emit('add', item)"
       class="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 backdrop-blur-sm text-white hover:bg-black/80 transition"
     >
@@ -53,7 +50,7 @@ defineEmits<{
     <div class="absolute bottom-0 left-0 w-full p-4">
       <div class="mb-1 flex items-center gap-2">
         <span class="text-[10px] font-bold uppercase tracking-wider text-white/60">
-          {{ itemType ?? "Media" }}
+          {{ itemType ?? 'Media' }}
         </span>
       </div>
 

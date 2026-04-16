@@ -36,7 +36,6 @@ const cleanUI = ref<boolean>(false)
       class="relative order-1 flex-1 overflow-y-auto overflow-x-hidden p-4 scrollbar-hide z-10 md:order-2 md:p-8"
     >
       <div class="mx-auto max-w-7xl pb-32">
-
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
