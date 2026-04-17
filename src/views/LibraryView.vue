@@ -98,7 +98,6 @@ const handleAdd = async (item: any) => {
 const handleFilter = async (filter: any) => {
   musicFilter.set(filter);
   items.value = [];
-  //  handleLoadMore({ offset: 0, limit: pageSize, done: () => {} });
 };
 </script>
 

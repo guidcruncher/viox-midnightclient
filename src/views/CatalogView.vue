@@ -1,106 +1,112 @@
 <script setup lang="ts">
-import type { MediaItem } from '../types'
+import type { MediaItem } from "../types";
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue";
 
-import { ApiClient } from '@/api'
-import { usePlayer } from '@/composables/usePlayer'
+import { ApiClient } from "@/api";
+import { usePlayer } from "@/composables/usePlayer";
 
 interface LoadMoreEvent {
-  offset: number
-  limit: number
-  done: (moreAvailable: boolean) => void
+  offset: number;
+  limit: number;
+  done: (moreAvailable: boolean) => void;
 }
 
-const sources = ref<any[]>([])
-const pageSize = 20
-const { currentTrack, playItem } = usePlayer()
-const items = ref<MediaItem[]>([])
-const isLoading = ref(false)
-const isReady = ref(false)
-const parentItem = ref<MediaItem | undefined>(undefined)
-const source = ref<any>({})
+const sources = ref<any[]>([]);
+const pageSize = 20;
+const { currentTrack, playItem } = usePlayer();
+const items = ref<MediaItem[]>([]);
+const isLoading = ref(false);
+const isReady = ref(false);
+const parentItem = ref<MediaItem | undefined>(undefined);
+const source = ref<any>({});
 
 const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
-  if (isLoading.value) return
-  isLoading.value = true
+  if (isLoading.value) return;
+  isLoading.value = true;
   try {
-    if (offset === 0) items.value = [] // Clear items on initial load or filter change
+    if (offset === 0) items.value = []; // Clear items on initial load or filter change
     const categoryId = parentItem.value
       ? parentItem.value.sourceRef.sourceId
-      : source.value.sourceId
+      : source.value.sourceId;
 
-    const response = (await ApiClient.getCatalogItems(source.value.id, categoryId, offset, limit))
-      .data
+    const response = (
+      await ApiClient.getCatalogItems(source.value.id, categoryId, offset, limit)
+    ).data;
 
-    items.value.push(...response)
-    const moreAvailable = response.length !== 0
-    done(moreAvailable)
+    items.value.push(...response);
+    const moreAvailable = response.length !== 0;
+    done(moreAvailable);
   } catch (error) {
-    console.error('Failed to load items:', error)
-    done(false) // Stop observing on error
+    console.error("Failed to load items:", error);
+    done(false); // Stop observing on error
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 // Initial fetch
 onMounted(async () => {
-  const src: any = await ApiClient.getCatalog()
-  parentItem.value = undefined
+  const src: any = await ApiClient.getCatalog();
+  parentItem.value = undefined;
   sources.value = src.data.sort((a: any, b: any) => {
-    return a.name.localeCompare(b.name)
-  }) as any[]
-  source.value = sources.value[0]
+    return a.name.localeCompare(b.name);
+  }) as any[];
+  source.value = sources.value[0];
   parentItem.value = {
-    id: '',
-    title: '',
+    id: "",
+    title: "",
     sourceRef: {
       source: source.value.id,
-      itemType: 'metadata',
+      itemType: "metadata",
       sourceId: source.value.initialFilter,
     },
-  }
+  };
 
   //  handleLoadMore({ offset: 0, limit: pageSize, done: () => {} });
-  isReady.value = true
-})
+  isReady.value = true;
+});
 
 const handleSelect = async (item: any) => {
   switch (item.sourceRef.itemType) {
-    case 'metadata':
-      parentItem.value = item
-      handleLoadMore({ offset: 0, limit: pageSize, done: () => {} })
-      break
-    case 'folder':
-      parentItem.value = item
-      handleLoadMore({ offset: 0, limit: pageSize, done: () => {} })
-      break
+    case "metadata":
+      parentItem.value = item;
+      handleLoadMore({ offset: 0, limit: pageSize, done: () => {} });
+      break;
+    case "folder":
+      parentItem.value = item;
+      handleLoadMore({ offset: 0, limit: pageSize, done: () => {} });
+      break;
     default:
-      await playItem(item)
+      await playItem(item);
   }
-}
+};
 
 const handleAdd = async (item: any) => {
-  if (item.sourceRef.itemType !== 'metadata' && item.sourceRef.itemType !== 'folder') {
-    await ApiClient.addToLibrary(item.id)
+  if (item.sourceRef.itemType !== "metadata" && item.sourceRef.itemType !== "folder") {
+    if (item.library) {
+      await ApiClient.removeFromLibrary(item.id);
+    } else {
+      await ApiClient.addToLibrary(item.id);
+    }
+    item.library = !item.library;
   }
-}
+};
 
 const handleFilter = async (item: any) => {
-  source.value = item
+  source.value = item;
   parentItem.value = {
-    id: '',
-    title: '',
+    id: "",
+    title: "",
     sourceRef: {
-      itemType: 'metadata',
+      itemType: "metadata",
       source: source.value.id,
       sourceId: source.value.initialFilter,
     },
-  }
+  };
 
-  handleLoadMore({ offset: 0, limit: pageSize, done: () => {} })
-}
+  handleLoadMore({ offset: 0, limit: pageSize, done: () => {} });
+};
 </script>
 
 <template>
