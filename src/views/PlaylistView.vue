@@ -46,8 +46,13 @@ const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
   }
 }
 
-const handleAdd = async () => {
-  await ApiClient.addToLibrary(playListId)
+const handleAdd = async (item: any) => {
+  if (item.library) {
+    await ApiClient.removeFromLibrary(item.id)
+  } else {
+    await ApiClient.addToLibrary(item.id)
+  }
+  playlist.value = (await ApiClient.getPlaylist(playListId)).data
 }
 
 const handlePlayAll = async () => {

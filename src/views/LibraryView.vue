@@ -83,10 +83,18 @@ const handleSelect = async (item: MediaItem) => {
   }
 }
 
+const handleAdd = async (item: any) => {
+  if (item.library) {
+    await ApiClient.removeFromLibrary(item.id)
+  } else {
+    await ApiClient.addToLibrary(item.id)
+  }
+  item.library = !item.library
+}
+
 const handleFilter = async (filter: any) => {
   musicFilter.set(filter)
   items.value = []
-  //  handleLoadMore({ offset: 0, limit: pageSize, done: () => {} });
 }
 </script>
 
@@ -128,6 +136,7 @@ const handleFilter = async (filter: any) => {
             :title="item.title"
             :subtitle="item.subtitle"
             @click="handleSelect"
+            @add="handleAdd"
           />
         </div>
       </PagedList>

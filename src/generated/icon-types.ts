@@ -25,7 +25,6 @@ export type IconName =
   | 'MoreHorizontal'
   | 'Pause'
   | 'Play'
-  | 'Plus'
   | 'Podcast'
   | 'Radio'
   | 'Search'

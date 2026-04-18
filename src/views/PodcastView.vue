@@ -57,8 +57,13 @@ const handleSubscribe = async () => {
   podcast.value = (await ApiClient.getLibraryItem(podcastId.value)).data
 }
 
-const handleAdd = async () => {
-  await ApiClient.addToLibrary(podcastId.value)
+const handleAdd = async (item: any) => {
+  if (item.library) {
+    await ApiClient.removeFromLibrary(item.id)
+  } else {
+    await ApiClient.addToLibrary(podcastId.value)
+  }
+  podcast.value = (await ApiClient.getLibraryItem(podcastId.value)).data
 }
 
 const handlePlayAll = async () => {

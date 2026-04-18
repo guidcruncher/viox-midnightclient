@@ -83,7 +83,12 @@ const handleSelect = async (item: any) => {
 
 const handleAdd = async (item: any) => {
   if (item.sourceRef.itemType !== 'metadata' && item.sourceRef.itemType !== 'folder') {
-    await ApiClient.addToLibrary(item.id)
+    if (item.library) {
+      await ApiClient.removeFromLibrary(item.id)
+    } else {
+      await ApiClient.addToLibrary(item.id)
+    }
+    item.library = !item.library
   }
 }
 

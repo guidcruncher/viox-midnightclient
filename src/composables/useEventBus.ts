@@ -1,4 +1,4 @@
-export type VioxEventType =
+type VioxEventType =
   | 'track_start'
   | 'track_pause'
   | 'track_resume'
@@ -14,7 +14,7 @@ export type VioxEventType =
   | 'inactive'
   | 'eventbus_error'
 
-export interface VioxEvent {
+interface VioxEvent {
   type: VioxEventType
   payload: any
 }
@@ -23,7 +23,7 @@ import mitt, { type EventType } from 'mitt'
 
 const emitter = mitt<Record<EventType, VioxEvent>>()
 
-export function useEventBus() {
+function useEventBus() {
   return emitter
 }
 

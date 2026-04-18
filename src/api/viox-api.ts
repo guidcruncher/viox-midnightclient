@@ -9,7 +9,7 @@ import {
   SuccessTrackResponse,
 } from './types'
 
-export class VIOXApi {
+class VIOXApi {
   private http: AxiosInstance
   private readonly baseURL: string
 
@@ -131,6 +131,10 @@ export class VIOXApi {
 
   addToLibrary(id: string): Promise<AxiosResponse<MediaItem | undefined>> {
     return this.http.post(`/api/library/${encodeURIComponent(id)}`)
+  }
+
+  removeFromLibrary(id: string): Promise<AxiosResponse<MediaItem | undefined>> {
+    return this.http.delete(`/api/library/${encodeURIComponent(id)}`)
   }
 
   /* ---------------------- Playlists ---------------------- */
