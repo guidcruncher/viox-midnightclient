@@ -1,104 +1,101 @@
 <script setup lang="ts">
-import type { MediaItem } from "../types";
+import type { MediaItem } from '../types'
 
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-import { ApiClient } from "@/api";
-import { usePlayer } from "@/composables/usePlayer";
-import { useStorage } from "@/composables/useStorage";
+import { ApiClient } from '@/api'
+import { usePlayer } from '@/composables/usePlayer'
+import { useStorage } from '@/composables/useStorage'
 
-const router = useRouter();
+const router = useRouter()
 
 interface LoadMoreEvent {
-  offset: number;
-  limit: number;
-  done: (moreAvailable: boolean) => void;
+  offset: number
+  limit: number
+  done: (moreAvailable: boolean) => void
 }
 
-const parentItem = ref<MediaItem | undefined>(undefined);
-const ready = ref(false);
-const { currentTrack, playItem } = usePlayer();
-const musicFilter = useStorage<any>("currentLibraryFilter", undefined, "local");
-const items = ref<MediaItem[]>([]);
-const isLoading = ref(false);
-const pageSize = 20;
-const filters = ref<any[]>([]);
+const parentItem = ref<MediaItem | undefined>(undefined)
+const ready = ref(false)
+const { currentTrack, playItem } = usePlayer()
+const musicFilter = useStorage<any>('currentLibraryFilter', undefined, 'local')
+const items = ref<MediaItem[]>([])
+const isLoading = ref(false)
+const pageSize = 20
+const filters = ref<any[]>([])
 
 const handleLoadMore = async ({ offset, limit, done }: LoadMoreEvent) => {
-  if (isLoading.value) return;
-  isLoading.value = true;
+  if (isLoading.value) return
+  isLoading.value = true
   try {
-    if (offset === 0) items.value = []; // Clear items on initial load or filter change
+    if (offset === 0) items.value = [] // Clear items on initial load or filter change
 
-    let response;
+    let response
 
     switch (musicFilter.value.name) {
-      case "Playlists":
-        response = (await ApiClient.getPlaylists(offset, limit)).data;
-        break;
-      case "Files":
-        response = (await ApiClient.getLocalItems(parentItem.value?.id, offset, limit))
-          .data;
-        break;
+      case 'Playlists':
+        response = (await ApiClient.getPlaylists(offset, limit)).data
+        break
+      case 'Files':
+        response = (await ApiClient.getLocalItems(parentItem.value?.id, offset, limit)).data
+        break
       default:
-        response = (
-          await ApiClient.getLibrary(musicFilter.value.itemTypes, offset, limit)
-        ).data;
-        break;
+        response = (await ApiClient.getLibrary(musicFilter.value.itemTypes, offset, limit)).data
+        break
     }
 
-    items.value.push(...response);
-    const moreAvailable = response.length !== 0;
-    done(moreAvailable);
+    items.value.push(...response)
+    const moreAvailable = response.length !== 0
+    done(moreAvailable)
   } catch (error) {
-    console.error("Failed to load items:", error);
-    done(false); // Stop observing on error
+    console.error('Failed to load items:', error)
+    done(false) // Stop observing on error
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
 // Initial fetch
 onMounted(async () => {
-  const libraryFilters = (await ApiClient.getCapabilities()).libraryFilters;
-  filters.value = libraryFilters ? libraryFilters : [];
+  const libraryFilters = (await ApiClient.getCapabilities()).libraryFilters
+  filters.value = libraryFilters ? libraryFilters : []
 
   if (!musicFilter.value) {
-    musicFilter.value = libraryFilters ? libraryFilters[0] : {};
+    musicFilter.value = libraryFilters ? libraryFilters[0] : {}
   }
 
-  ready.value = true;
+  ready.value = true
   //handleLoadMore({ offset: 0, limit: pageSize, done: () => {} })
-});
+})
 
 const handleSelect = async (item: MediaItem) => {
   switch (item.sourceRef.itemType) {
-    case "playlist":
-      router.push({ name: "playlist", query: { id: item.id } });
-      break;
-    case "folder":
-      parentItem.value = item;
-      items.value = [];
-      break;
+    case 'playlist':
+      router.push({ name: 'playlist', query: { id: item.id } })
+      break
+    case 'folder':
+      parentItem.value = item
+      items.value = []
+      break
     default:
-      await playItem(item);
+      await playItem(item)
   }
-};
+}
 
 const handleAdd = async (item: any) => {
   if (item.library) {
-    await ApiClient.removeFromLibrary(item.id);
+    await ApiClient.removeFromLibrary(item.id)
   } else {
-    await ApiClient.addToLibrary(item.id);
+    await ApiClient.addToLibrary(item.id)
   }
-  item.library = !item.library;
-};
+  item.library = !item.library
+}
 
 const handleFilter = async (filter: any) => {
-  musicFilter.set(filter);
-  items.value = [];
-};
+  musicFilter.set(filter)
+  items.value = []
+}
 </script>
 
 <template>
