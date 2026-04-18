@@ -23,7 +23,7 @@ import mitt, { type EventType } from 'mitt'
 
 const emitter = mitt<Record<EventType, VioxEvent>>()
 
-export function useEventBus() {
+function useEventBus() {
   return emitter
 }
 

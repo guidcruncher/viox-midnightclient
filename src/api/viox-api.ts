@@ -9,7 +9,7 @@ import {
   SuccessTrackResponse,
 } from './types'
 
-export class VIOXApi {
+class VIOXApi {
   private http: AxiosInstance
   private readonly baseURL: string
 
