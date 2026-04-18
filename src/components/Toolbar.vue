@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { IconName } from '@/generated/icon-types'
 
-export interface ToolbarButton {
+interface ToolbarButton {
   key: string
   label: string
   icon: IconName | string

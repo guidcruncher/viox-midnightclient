@@ -6,7 +6,7 @@ import { computed } from 'vue'
 
 import LucideIcon from '@/components/LucideIcon.vue'
 
-export interface TabItem {
+interface TabItem {
   key: string
   label: string
   icon: IconName | string
