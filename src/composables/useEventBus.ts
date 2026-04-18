@@ -1,4 +1,4 @@
-export type VioxEventType =
+type VioxEventType =
   | 'track_start'
   | 'track_pause'
   | 'track_resume'
@@ -14,7 +14,7 @@ export type VioxEventType =
   | 'inactive'
   | 'eventbus_error'
 
-export interface VioxEvent {
+interface VioxEvent {
   type: VioxEventType
   payload: any
 }
