@@ -14,6 +14,7 @@ import PlaylistView from '../views/PlaylistView.vue'
 import PodcastView from '../views/PodcastView.vue'
 import QueueView from '../views/QueueView.vue'
 import SoundSettings from '../views/SoundSettings.vue'
+import Visualizers from '../views/Visualizers.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -84,6 +85,14 @@ const routes: RouteRecordRaw[] = [
             label: 'Sound',
             order: 5,
           },
+        },
+      },
+      {
+        path: 'visualizers',
+        name: 'visualizers',
+        component: Visualizers,
+        meta: {
+          title: 'Visualizers'  ,
         },
       },
       {
