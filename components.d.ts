@@ -22,6 +22,7 @@ declare module 'vue' {
     Loading: typeof import('./src/components/Loading.vue')['default']
     LucideIcon: typeof import('./src/components/LucideIcon.vue')['default']
     ModalDialog: typeof import('./src/components/ModalDialog.vue')['default']
+    MusicVisualizer: typeof import('./src/components/MusicVisualizer.vue')['default']
     NavButton: typeof import('./src/components/NavButton.vue')['default']
     NotificationToast: typeof import('./src/components/NotificationToast.vue')['default']
     OverlayPanel: typeof import('./src/components/OverlayPanel.vue')['default']
