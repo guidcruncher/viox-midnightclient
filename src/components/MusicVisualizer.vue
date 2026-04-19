@@ -6,8 +6,7 @@ import { getBaseUrl } from '../utils/baseUrl';
 const host = getBaseUrl().replace(/^http/, 'ws');
 
 const props = defineProps<{
-  sensitivity?: number; // Recommended: 100 - 300 with new scaling
-  gap?: number;        // Space between bars
+  sensitivity?: number;
 }>();
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -15,8 +14,8 @@ const state = reactive({ isConnected: false });
 let socket: WebSocket | null = null;
 let animationId: number | null = null;
 
-// Persistence for smoothing (prevents flickering)
-let previousMagnitudes = new Float32Array(64);
+// Persistent buffer to smooth out the frame-to-frame "jitter"
+const smoothMagnitudes = new Float32Array(64);
 
 const cleanup = () => {
   if (animationId) cancelAnimationFrame(animationId);
@@ -32,7 +31,7 @@ const cleanup = () => {
 
 const draw = (data: Float32Array) => {
   const canvas = canvasRef.value;
-  if (!canvas || !canvas.getContext) return;
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
@@ -40,40 +39,30 @@ const draw = (data: Float32Array) => {
   const w = canvas.width / dpr;
   const h = canvas.height / dpr;
 
-  // 1. Clear the entire canvas
   ctx.clearRect(0, 0, w, h);
   
-  const barSpacing = props.gap ?? 2;
+  const barSpacing = 2;
   const barWidth = (w / data.length) - barSpacing;
-  
-  // 2. Constants for audio "feel"
-  const NOISE_GATE = 0.01;  // Ignore anything below this level
-  const SMOOTHING = 0.2;    // How much of the NEW data to use (0.1 to 1.0)
+  const multiplier = props.sensitivity || 1200; // Adjusted for noise gate
+  const SMOOTHING_FACTOR = 0.25; // 0.0 - 1.0 (Lower is smoother)
 
   data.forEach((mag, i) => {
-    // 3. Noise Gate & Smoothing
-    // We blend the new value with the old value to stop the "shaking"
-    let val = mag < NOISE_GATE ? 0 : mag;
-    val = (val * SMOOTHING) + (previousMagnitudes[i] * (1 - SMOOTHING));
-    previousMagnitudes[i] = val;
+    // 1. Interpolate between current value and new value (Lerp)
+    smoothMagnitudes[i] = (mag * SMOOTHING_FACTOR) + (smoothMagnitudes[i] * (1 - SMOOTHING_FACTOR));
 
-    // 4. Logarithmic-like scaling 
-    // This makes the bars "pop" more when music is playing
-    const scale = props.sensitivity || 150;
-    let barHeight = Math.sqrt(val) * scale;
+    // 2. Calculate Height (Ensure it's strictly positive)
+    let barHeight = Math.max(0, smoothMagnitudes[i] * multiplier);
 
-    // 5. Clamp to canvas height
+    // 3. Ignore heights less than 1 pixel (Noise cutoff)
+    if (barHeight < 1) return;
     if (barHeight > h) barHeight = h;
-    if (barHeight < 0) barHeight = 0;
 
-    // 6. Draw from the bottom
+    // 4. Coordinate Fix: y = total height - bar height
     const x = i * (barWidth + barSpacing);
     const y = h - barHeight;
 
     const hue = (i / data.length) * 280;
     ctx.fillStyle = `hsl(${hue}, 80%, 50%)`;
-    
-    // Logic: fillRect(x, startY, width, heightToDrawDown)
     ctx.fillRect(x, y, barWidth, barHeight);
   });
 };
@@ -84,17 +73,12 @@ const connect = () => {
   socket = new WebSocket(url);
   socket.binaryType = 'arraybuffer';
 
-  socket.onopen = () => {
-    state.isConnected = true;
-  };
-
+  socket.onopen = () => { state.isConnected = true; };
   socket.onmessage = (event) => {
     const magnitudes = new Float32Array(event.data);
     if (animationId) cancelAnimationFrame(animationId);
     animationId = requestAnimationFrame(() => draw(magnitudes));
   };
-
-  socket.onerror = () => { cleanup(); };
   socket.onclose = () => { state.isConnected = false; };
 };
 
@@ -102,20 +86,15 @@ onMounted(() => {
   if (canvasRef.value) {
     const canvas = canvasRef.value;
     const dpr = window.devicePixelRatio || 1;
-    
-    // Set internal resolution
     canvas.width = canvas.offsetWidth * dpr;
     canvas.height = canvas.offsetHeight * dpr;
-    
-    const ctx = canvas.getContext('2d');
-    if (ctx) ctx.scale(dpr, dpr);
-    
+    canvas.getContext('2d')?.scale(dpr, dpr);
     connect();
   }
 });
 
-onBeforeUnmount(() => cleanup());
-onUnmounted(() => cleanup());
+onBeforeUnmount(cleanup);
+onUnmounted(cleanup);
 </script>
 
 <template>
@@ -135,23 +114,17 @@ onUnmounted(() => cleanup());
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: inset 0 0 20px rgba(0,0,0,1);
 }
 canvas {
   width: 100%;
   height: 100%;
-  display: block;
 }
 .status {
   position: absolute;
   top: 10px;
   right: 15px;
   font-size: 10px;
-  font-weight: bold;
-  color: #333;
-  pointer-events: none;
+  color: #444;
 }
-.status.active {
-  color: #00ff88;
-}
+.status.active { color: #00ff88; }
 </style>
