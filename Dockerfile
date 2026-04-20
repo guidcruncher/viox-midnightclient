@@ -14,10 +14,16 @@ COPY ./knip.json knip.json
 COPY ./tsconfig* .
 COPY ./vite* .
 COPY ./*.js .
-COPY ./package.json package.json
+
+COPY ./package.json ./package-lock.json* ./pnpm-lock.yaml ./
+
+# Install full dependency tree deterministically
+# Note: In Alpine, some pnpm packages with C++ addons may need:
+# RUN apk add --no-cache python3 make g++
 RUN npm install -g pnpm
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 RUN pnpm approve-builds --all
+
 RUN pnpm run build:prod
 COPY ./public /build/dist/
 COPY ./package.json /build/dist/package.json
