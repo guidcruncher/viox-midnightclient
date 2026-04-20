@@ -80,11 +80,14 @@ onMounted(async () => {
     </div>
 
     <!-- Scrollable List -->
-    <div v-if="ready" class="space-y-3 max-h-[60vh] overflow-y-auto scrollbar-viox pr-1">
+    <div
+      v-if="ready"
+      class="space-y-3 max-h-[60vh] overflow-y-auto scrollbar-viox pr-1 bg-slate-900/90 backdrop-blur-3xl border border-white/10 rounded-[1.9rem] px-5 py-5 shadow-preset-inset"
+    >
       <div
         v-for="(track, index) in tracks"
         :key="track.id"
-        class="glass p-3 rounded-2xl flex items-center gap-4 transition-all hover:bg-white/5 cursor-pointer group active:scale-[0.98]"
+        class="flex items-center gap-4 transition-all hover:bg-white/5 cursor-pointer group active:scale-[0.98]"
         :class="{ 'border-viox-electric/30 active-glow': isPlaying(track) }"
       >
         <!-- Album Art / Playing Animation -->
