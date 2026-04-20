@@ -1,31 +1,31 @@
 :8081 {
-    root * /app
-    encode gzip
+	root * /app
+	encode gzip
 
-    # Vue Router History Mode
-    try_files {path} {path}/ /index.html
+	# Vue Router History Mode
+	try_files {path} {path}/ /index.html
 
-    file_server
+	file_server
 
-    # Disable caching (global)
-    header {
-        # Equivalent to:
-        # add_header Last-Modified $date_gmt;
-        # add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
-        # if_modified_since off;
-        # expires off;
-        # etag off;
+	# Disable caching (global)
+	header {
+		# Equivalent to:
+		# add_header Last-Modified $date_gmt;
+		# add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+		# if_modified_since off;
+		# expires off;
+		# etag off;
 
-        -Last-Modified
-        -ETag
+		-Last-Modified
+		-ETag
 
-        Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
-    }
+		Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+	}
 
-    # Error page
-    handle_errors {
-        @5xx expression `{err.status_code} >= 500 && {err.status_code} <= 504`
-        rewrite * /50x.html
-        file_server
-    }
+	# Error page
+	handle_errors {
+		@5xx expression `{err.status_code} >= 500 && {err.status_code} <= 504`
+		rewrite * /50x.html
+		file_server
+	}
 }
