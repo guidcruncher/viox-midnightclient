@@ -12,9 +12,6 @@ const visualizerMap = {
 
 export type VisualizerKey = keyof typeof visualizerMap
 
-export const visualizerComponent = (selected?: VisualizerKey) => {
-  if (!selected) {
-    return visualizerMap['bar']
-  }
-  return visualizerMap[selected]
+export const visualizerComponent = (key: VisualizerKey) => {
+  return visualizerMap[key] || visualizerMap['bar']
 }

@@ -23,6 +23,13 @@ class VIOXApi {
     })
   }
 
+  async getConfigKeyValue(key: string): Promise<any | undefined> {
+    const res = await this.http.get(`/api/config/${key}`)
+    if (res) return res.data.value
+
+    return undefined
+  }
+
   /* ---------------------- Status ---------------------- */
   async getCapabilities(): Promise<any | undefined> {
     const res = await this.http.get('/api/capabilities')
