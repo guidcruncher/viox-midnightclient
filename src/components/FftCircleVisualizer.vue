@@ -5,9 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue"
+import { ref, onMounted, onUnmounted } from 'vue'
 
-import { FftClient, type FftFrame } from "@/api/fft-client"
+import { FftClient, type FftFrame } from '@/api/fft-client'
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const frame = ref<FftFrame | null>(null)
@@ -19,7 +19,7 @@ let resizeObserver: ResizeObserver | null = null
 function draw() {
   const canvas = canvasRef.value
   if (!canvas) return
-  const ctx = canvas.getContext("2d")
+  const ctx = canvas.getContext('2d')
   if (!ctx) return
 
   const rect = canvas.getBoundingClientRect()

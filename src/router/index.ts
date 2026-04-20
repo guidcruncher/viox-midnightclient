@@ -92,7 +92,7 @@ const routes: RouteRecordRaw[] = [
         name: 'visualizers',
         component: Visualizers,
         meta: {
-          title: 'Visualizers'  ,
+          title: 'Visualizers',
         },
       },
       {
