@@ -34,25 +34,35 @@ const { showFullPlayer, currentTrack, progress } = usePlayer()
         </button>
       </div>
 
-      <div class="flex flex-1 flex-col landscape:flex-row items-center justify-center px-8 pb-10 landscape:pb-4 landscape:gap-12">
-        
-        <div class="relative aspect-square w-full max-w-sm md:max-w-md landscape:max-w-[40vh] perspective-1000">
+      <div
+        class="flex flex-1 flex-col landscape:flex-row items-center justify-center px-8 pb-10 landscape:pb-4 landscape:gap-12"
+      >
+        <div
+          class="relative aspect-square w-full max-w-sm md:max-w-md landscape:max-w-[40vh] perspective-1000"
+        >
           <div class="relative w-full h-full transition-all duration-500 transform-style-3d">
-            <div class="absolute inset-0 backface-hidden transition-opacity opacity-100 duration-300">
+            <div
+              class="absolute inset-0 backface-hidden transition-opacity opacity-100 duration-300"
+            >
               <PlayerArtwork />
             </div>
           </div>
         </div>
 
         <div class="flex flex-col w-full max-w-lg landscape:justify-center">
-          
           <div class="mt-10 landscape:mt-0 w-full text-center md:text-left">
             <div class="flex items-start justify-between">
               <div>
-                <h2 v-if="currentTrack" class="text-3xl font-black text-white md:text-4xl landscape:text-2xl">
+                <h2
+                  v-if="currentTrack"
+                  class="text-3xl font-black text-white md:text-4xl landscape:text-2xl"
+                >
                   {{ currentTrack.title }}
                 </h2>
-                <p v-if="currentTrack" class="mt-1 text-lg font-medium text-cyan-400 landscape:text-base">
+                <p
+                  v-if="currentTrack"
+                  class="mt-1 text-lg font-medium text-cyan-400 landscape:text-base"
+                >
                   {{ currentTrack.subtitle }}
                 </p>
               </div>
@@ -83,7 +93,9 @@ const { showFullPlayer, currentTrack, progress } = usePlayer()
             </div>
           </div>
 
-          <div class="mt-8 landscape:mt-6 flex items-center justify-between md:justify-center md:gap-12">
+          <div
+            class="mt-8 landscape:mt-6 flex items-center justify-between md:justify-center md:gap-12"
+          >
             <PlayerControls :size="36" />
 
             <button class="text-white/40 hover:text-white">
@@ -91,7 +103,6 @@ const { showFullPlayer, currentTrack, progress } = usePlayer()
             </button>
           </div>
         </div>
-
       </div>
     </div>
   </transition>

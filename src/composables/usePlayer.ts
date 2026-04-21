@@ -10,6 +10,7 @@ import { on, off } from './useEventBus'
 const playing = ref(false)
 const currentTrack = ref<MediaItem | undefined>(undefined)
 const progress = ref(0)
+const progressValue = ref({ current: 0, total: 0, percent: 0 })
 const showFullPlayer = ref(false)
 
 const handlePlayer = () => {
@@ -21,6 +22,11 @@ export function usePlayer() {
 
   onMounted(async () => {
     await status()
+
+    on('time-update', async (payload: any) => {
+      progress.value = payload.percent
+      progressValue.value = payload
+    })
 
     on('track_change', async (_payload: any) => {
       await status()
@@ -34,6 +40,7 @@ export function usePlayer() {
       await status()
       playing.value = false
       progress.value = 0
+      progressValue.value = { current: 0, total: 0, percent: 0 }
     })
     on('track_pause', async (_payload: any) => {
       await status()
@@ -51,6 +58,7 @@ export function usePlayer() {
     off('track_stop')
     off('track_pause')
     off('track_resume')
+    off('time-update')
   })
   // --- Methods ---
 
