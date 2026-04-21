@@ -1,12 +1,5 @@
 <template>
   <div class="w-full h-full flex flex-col bg-slate-900 text-slate-100 relative">
-    <div class="absolute top-4 left-4 z-10 p-2 bg-black/40 rounded text-xs text-slate-400">
-      Status: <span :class="isConnectedRef ? 'text-green-400' : 'text-red-400'">
-        {{ isConnectedRef ? 'Connected' : 'Disconnected' }}
-      </span>
-      | Mode: Frequency Radial Field
-    </div>
-    
     <div ref="containerRef" class="flex-1 relative overflow-hidden p-0 m-0">
       <canvas ref="canvasRef" class="absolute inset-0 w-full h-full block"></canvas>
     </div>
@@ -33,7 +26,6 @@ let logicalWidth = 0
 let logicalHeight = 0
 let centerX = 0
 let centerY = 0
-let maxRadius = 0
 
 // --- PARTICLE SYSTEM CONFIG ---
 const MAX_PARTICLES = 1500
@@ -47,12 +39,12 @@ interface Particle {
   y: number
   vx: number
   vy: number
-  life: number    // 0 to 1
-  decay: number  // how fast life decreases
+  life: number // 0 to 1
+  decay: number // how fast life decreases
   hue: number
   baseSize: number
   // Store the frequency bin index this particle reacts to
-  binIndex: number 
+  binIndex: number
 }
 
 // The core particle state
@@ -63,8 +55,8 @@ function spawnParticle(indexOverride?: number) {
   const angle = Math.random() * Math.PI * 2
   // Particles spawn slightly off-center
   const spawnRadius = 20 + Math.random() * 30
-  
-  // Assign a frequency bin to this particle. 
+
+  // Assign a frequency bin to this particle.
   // We can bias this (e.g., more particles for bass) or distribute uniformly.
   const binIndex = Math.floor(Math.pow(Math.random(), 2) * (latestFrame.value?.length || 1024))
   // The Hue is derived from its assigned bin (creating color rings)
@@ -79,7 +71,7 @@ function spawnParticle(indexOverride?: number) {
     decay: 0.005 + Math.random() * 0.01,
     hue: baseHue,
     baseSize: 0.5 + Math.random() * 1.5,
-    binIndex: binIndex
+    binIndex: binIndex,
   }
 
   if (typeof indexOverride === 'number') {
@@ -108,7 +100,7 @@ function startClient() {
       latestFrame.value = frame
       // Initialize if we haven't yet, now that we know frame length
       if (particles.length === 0 && frame.length > 0) {
-          initParticles()
+        initParticles()
       }
     },
   })
@@ -132,7 +124,7 @@ function resizeCanvas() {
   logicalHeight = rect.height
   centerX = logicalWidth / 2
   centerY = logicalHeight / 2
-  maxRadius = Math.sqrt(centerX * centerX + centerY * centerY)
+  // let maxRadius = Math.sqrt(centerX * centerX + centerY * centerY)
 
   canvas.width = logicalWidth * dpr
   canvas.height = logicalHeight * dpr
@@ -150,7 +142,7 @@ function draw() {
   const canvas = canvasRef.value
   const ctx = canvas?.getContext('2d')
   const frame = latestFrame.value
-  
+
   if (!canvas || !ctx) return
 
   // CLEAR: Use additive trailing for smoothness
@@ -165,13 +157,12 @@ function draw() {
   ctx.globalCompositeOperation = 'lighter'
 
   // Pre-calculate common factors for this frame
-  const frameLength = frame.length
 
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i]
 
     // 1. UPDATE STATE based on FFT
-    
+
     // Get energy for this particle's assigned bin, clamped 0-1
     const rawValue = frame[p.binIndex] || 0
     const binNorm = Math.max(0, Math.min(rawValue / MAX_VALUE_NORMALIZER, 1))
@@ -179,16 +170,16 @@ function draw() {
     // Frequency creates outward "thrust"
     // Apply speed boost proportional to normalized bin energy
     const speedBoost = binNorm * FREQUENCY_INFLUENCE
-    
+
     // Radial direction vector (normalize current position relative to center)
     const dx = p.x - centerX
     const dy = p.y - centerY
     const dist = Math.sqrt(dx * dx + dy * dy)
-    
+
     // Normalize and apply boost
     if (dist > 0) {
-        p.vx = (dx / dist) * (BASE_PARTICLE_SPEED + speedBoost)
-        p.vy = (dy / dist) * (BASE_PARTICLE_SPEED + speedBoost)
+      p.vx = (dx / dist) * (BASE_PARTICLE_SPEED + speedBoost)
+      p.vy = (dy / dist) * (BASE_PARTICLE_SPEED + speedBoost)
     }
 
     // Move particle
@@ -200,7 +191,8 @@ function draw() {
 
     // 2. RESPACE / RECYCLE CONDITIONS
     // Check boundaries or expiry
-    const isOutOfBounds = p.x < -50 || p.x > logicalWidth + 50 || p.y < -50 || p.y > logicalHeight + 50
+    const isOutOfBounds =
+      p.x < -50 || p.x > logicalWidth + 50 || p.y < -50 || p.y > logicalHeight + 50
     const isExpired = p.life <= 0
 
     if (isOutOfBounds || isExpired) {
@@ -210,21 +202,21 @@ function draw() {
 
     // 3. DRAW PARTICLE
     // Size reacts to frequency
-    const currentSize = p.baseSize + (binNorm * 4) // Expand on high energy
-    
+    const currentSize = p.baseSize + binNorm * 4 // Expand on high energy
+
     // Alpha reacts to life AND frequency (flash on peaks)
-    const finalAlpha = (p.life * 0.7) + (binNorm * 0.3)
-    
+    const finalAlpha = p.life * 0.7 + binNorm * 0.3
+
     // Lightness reacts to frequency (whiter peaks)
-    const lightness = 60 + (binNorm * 30)
+    const lightness = 60 + binNorm * 30
 
     ctx.fillStyle = `hsla(${p.hue}, 90%, ${lightness}%, ${finalAlpha})`
-    
+
     ctx.beginPath()
     ctx.arc(p.x, p.y, currentSize, 0, Math.PI * 2)
     ctx.fill()
   }
-  
+
   // Restore normal composite operation
   ctx.globalCompositeOperation = 'source-over'
 }

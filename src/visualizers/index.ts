@@ -1,8 +1,8 @@
 import FftBarVisualizer from './FftBarVisualizer.vue'
 import FftCircleVisualizer from './FftCircleVisualizer.vue'
+import FftParticleVisualizer from './FftParticleVisualizer.vue'
 import FftSpectrogram from './FftSpectrogram.vue'
 import FftWaveformVisualizer from './FftWaveformVisualizer.vue'
-import FftParticleVisualizer from './FftParticleVisualizer.vue'
 
 const visualizerMap = {
   bar: FftBarVisualizer,
