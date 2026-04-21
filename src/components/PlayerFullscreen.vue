@@ -5,7 +5,7 @@ import LucideIcon from './LucideIcon.vue'
 import PlayerArtwork from './PlayerArtwork.vue'
 import PlayerControls from './PlayerControls.vue'
 
-const { showFullPlayer, currentTrack, progress } = usePlayer()
+const { showFullPlayer, currentTrack, progressValue } = usePlayer()
 </script>
 
 <template>
@@ -79,11 +79,11 @@ const { showFullPlayer, currentTrack, progress } = usePlayer()
             <div class="relative h-2 w-full cursor-pointer rounded-full bg-white/10">
               <div
                 class="absolute h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 shadow-[0_0_15px_rgba(34,211,238,0.5)]"
-                :style="{ width: progress + '%' }"
+                :style="{ width: progressValue.percent + '%' }"
               ></div>
               <div
                 class="absolute top-1/2 -ml-2 h-4 w-4 -translate-y-1/2 rounded-full bg-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
-                :style="{ left: progress + '%' }"
+                :style="{ left: progressValue.percent + '%' }"
               ></div>
             </div>
 

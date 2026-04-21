@@ -144,6 +144,7 @@ export function usePlayer() {
     playing,
     currentTrack,
     progress,
+    progressValue,
     showFullPlayer,
     isConnected: true,
     // Actions
