@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "license": "MIT",
+  "description": "VIOX Music Server Web Client",
+  "keywords": "viox,client",
+  "homepage": "https://github.com/guidcruncher/viox-midnightclient",
+  "author": "John Crocker <182365840+guidcruncher@users.noreply.github.com> (https://linktr.ee/johncrocker)",
+  "funding": "https://buymeacoffee.com/guidcruncher",
   "scripts": {
     "docker": "make dev",
     "dev": "pnpm run format && vite --host",
