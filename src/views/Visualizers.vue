@@ -1,27 +1,25 @@
 <template>
   <!-- Fullscreen container -->
-  <div class="w-full h-[70vh] flex flex-col bg-slate-950 text-slate-100 overflow-hidden">
-    <!-- Grid fills the rest of the screen -->
-    <div class="flex-1 p-4 overflow-hidden">
-      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 w-full h-full">
-        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900">
-          <FftBarVisualizer />
-        </div>
-
-        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900">
-          <FftCircleVisualizer />
-        </div>
-
-        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900">
-          <FftWaveformVisualizer />
-        </div>
-
-        <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-900">
-          <FftSpectrogram />
-        </div>
-      </div>
-    </div>
+  <div
+    class="w-full h-[70vh] flex flex-col text-slate-100 overflow-hidden rounded-xl border border border-slate-800 bg-slate-900"
+  >
+    <component :is="visualizerComponentToRender" v-if="ready" />
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+
+import { ApiClient } from '@/api'
+import { visualizerComponent } from '@/visualizers/'
+
+const ready = ref(false)
+const visualizerComponentToRender = ref<ReturnType<typeof visualizerComponent> | null>(null)
+
+onMounted(async () => {
+  ready.value = false
+  const visualizer = await ApiClient.getConfigKeyValue('visualizer')
+  visualizerComponentToRender.value = await visualizerComponent(visualizer)
+  ready.value = true
+})
+</script>

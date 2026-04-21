@@ -57,14 +57,14 @@ onMounted(async () => {
   <div class="w-full animate-slide-up relative">
     <!-- Queue Header -->
     <div class="flex items-center justify-between mb-6 px-2">
-      <h3 class="font-display text-xs uppercase tracking-[0.2em] text-viox-lilac/60 font-bold">
+      <h3 class="font-display text-xs uppercase tracking-[0.2em] text-white/40 font-bold">
         Up Next
       </h3>
 
       <div class="flex items-center gap-3">
         <button
           @click.stop="selectTrack(tracks[0])"
-          class="p-2 text-viox-lilac/40 hover:text-viox-electric transition-all"
+          class="glass p-2 rounded-full text-viox-ice/60 hover:text-viox-electric transition-colors"
         >
           <LucideIcon name="Play" :size="18" />
         </button>
@@ -80,11 +80,14 @@ onMounted(async () => {
     </div>
 
     <!-- Scrollable List -->
-    <div v-if="ready" class="space-y-3 max-h-[60vh] overflow-y-auto scrollbar-viox pr-1">
+    <div
+      v-if="ready"
+      class="space-y-3 max-h-[60vh] overflow-y-auto scrollbar-viox pr-1 bg-slate-900/90 backdrop-blur-3xl border border-white/10 rounded-[1.9rem] px-5 py-5 shadow-preset-inset"
+    >
       <div
         v-for="(track, index) in tracks"
         :key="track.id"
-        class="glass p-3 rounded-2xl flex items-center gap-4 transition-all hover:bg-white/5 cursor-pointer group active:scale-[0.98]"
+        class="flex items-center gap-4 transition-all hover:bg-white/5 cursor-pointer group active:scale-[0.98]"
         :class="{ 'border-viox-electric/30 active-glow': isPlaying(track) }"
       >
         <!-- Album Art / Playing Animation -->
@@ -111,35 +114,29 @@ onMounted(async () => {
         <div class="flex-1 min-w-0" @click.stop="selectTrack(track.id)">
           <h4
             class="font-semibold truncate text-sm transition-colors"
-            :class="isPlaying(track) ? 'text-white' : 'text-viox-ice/90 group-hover:text-white'"
+            :class="isPlaying(track) ? 'text-white' : 'text-viox-ice/60 group-hover:text-white'"
           >
             {{ track.title }}
           </h4>
-          <p class="text-viox-lilac/60 text-xs truncate">{{ track.artist }}</p>
+          <p class="text-viox-ice/60 text-xs truncate">{{ track.artist }}</p>
         </div>
 
         <!-- Actions / Time -->
         <div class="flex items-center gap-3">
           <button
             @click.stop="selectTrack(track.id)"
-            class="p-2 text-viox-lilac/40 hover:text-viox-electric transition-all"
+            class="glass p-2 rounded-full text-viox-ice/60 hover:text-viox-electric transition-colors"
           >
             <LucideIcon name="Play" :size="18" />
           </button>
           <button
             @click.stop="deleteTrack(index)"
-            class="p-2 text-viox-lilac/40 hover:text-viox-electric transition-all"
+            class="glass p-2 rounded-full text-viox-ice/60 hover:text-viox-electric transition-colors"
           >
             <LucideIcon name="Trash2" :size="18" />
           </button>
 
-          <div
-            v-if="isPlaying(track)"
-            class="text-viox-electric font-mono text-[10px] pr-2 tracking-widest"
-          >
-            PLAYING
-          </div>
-          <div v-else class="text-viox-lilac/30 font-mono text-xs tabular-nums pr-2">
+          <div class="text-viox-ice/60 font-mono text-xs tabular-nums pr-2">
             {{ formatDuration(track.durationMs) }}
           </div>
         </div>
