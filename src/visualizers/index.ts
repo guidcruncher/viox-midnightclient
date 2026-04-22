@@ -1,6 +1,6 @@
 import FftBarVisualizer from './FftBarVisualizer.vue'
 import FftCircleVisualizer from './FftCircleVisualizer.vue'
-import FftParticleVisualizer from './FftParticleVisualizer.vue'
+import FftFireVisualizer from './FftFireVisualizer.vue'
 import FftSpectrogram from './FftSpectrogram.vue'
 import FftWaveformVisualizer from './FftWaveformVisualizer.vue'
 
@@ -9,7 +9,7 @@ const visualizerMap = {
   circle: FftCircleVisualizer,
   waveform: FftWaveformVisualizer,
   spectrogram: FftSpectrogram,
-  particles: FftParticleVisualizer,
+  fire: FftFireVisualizer,
 } as const
 
 export type VisualizerKey = keyof typeof visualizerMap

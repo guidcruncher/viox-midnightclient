@@ -23,6 +23,12 @@ export class FftClient {
   private readonly onClose?: (ev: CloseEvent) => void
   private readonly onError?: (ev: Event) => void
 
+  // --- OPTIMIZATION STATE ---
+  private processing = false
+  // Pre-allocated buffer to prevent Garbage Collection thrashing
+  private frameBuffer = new Float32Array(64)
+  // ---------------------------
+
   constructor(options: FftClientOptions) {
     this.url = options.url || `${getBaseUrl().replace(/^http/, 'ws')}/api/fft`
     this.onFrame = options.onFrame
@@ -47,10 +53,31 @@ export class FftClient {
     }
 
     ws.onmessage = (event: MessageEvent<ArrayBuffer>) => {
-      const data = event.data
-      // 64 bins, 4 bytes each → 256 bytes
-      const frame = new Float32Array(data)
-      this.onFrame?.(frame)
+      /**
+       * CLIENT LOCKING (Backpressure):
+       * If we are still busy processing the previous frame, drop this one.
+       * This prevents the browser task queue from being "swamped" if the
+       * server outpaces the client's render speed.
+       */
+      if (this.processing) {
+        return
+      }
+
+      this.processing = true
+
+      try {
+        // Use .set() to copy data into the existing buffer (zero-allocation)
+        const incomingData = new Float32Array(event.data)
+        this.frameBuffer.set(incomingData)
+
+        // Execute the visualizer update
+        if (this.onFrame) {
+          this.onFrame(this.frameBuffer)
+        }
+      } finally {
+        // Unlock so the next available message can be accepted
+        this.processing = false
+      }
     }
 
     ws.onclose = (ev) => {
@@ -70,9 +97,5 @@ export class FftClient {
       this.ws.close()
       this.ws = null
     }
-  }
-
-  public get readyState(): number | null {
-    return this.ws?.readyState ?? null
   }
 }
