@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full bg-slate-950 overflow-hidden">
+  <div class="w-full h-full overflow-hidden">
     <canvas ref="canvasRef" class="w-full h-full block"></canvas>
   </div>
 </template>
