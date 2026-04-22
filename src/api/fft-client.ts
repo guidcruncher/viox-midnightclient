@@ -5,13 +5,9 @@ export type FftFrame = Float32Array
 
 export interface FftClientOptions {
   url?: string
-  /** Called when a new FFT frame arrives */
   onFrame?: (frame: FftFrame) => void
-  /** Called when socket opens */
   onOpen?: () => void
-  /** Called when socket closes */
   onClose?: (ev: CloseEvent) => void
-  /** Called on error */
   onError?: (ev: Event) => void
 }
 
@@ -23,6 +19,9 @@ export class FftClient {
   private readonly onClose?: (ev: CloseEvent) => void
   private readonly onError?: (ev: Event) => void
 
+  // OPTIMIZATION: Persistent buffer to reduce GC pressure
+  private frameBuffer = new Float32Array(64)
+
   constructor(options: FftClientOptions) {
     this.url = options.url || `${getBaseUrl().replace(/^http/, 'ws')}/api/fft`
     this.onFrame = options.onFrame
@@ -32,47 +31,28 @@ export class FftClient {
   }
 
   public connect(): void {
-    if (
-      this.ws &&
-      (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)
-    ) {
-      return
-    }
+    if (this.ws?.readyState === WebSocket.OPEN) return
 
     const ws = new WebSocket(this.url)
     ws.binaryType = 'arraybuffer'
 
-    ws.onopen = () => {
-      this.onOpen?.()
-    }
-
     ws.onmessage = (event: MessageEvent<ArrayBuffer>) => {
-      const data = event.data
-      // 64 bins, 4 bytes each → 256 bytes
-      const frame = new Float32Array(data)
-      this.onFrame?.(frame)
+      // Use .set() to copy data into the existing buffer instead of allocating a new one
+      this.frameBuffer.set(new Float32Array(event.data))
+      this.onFrame?.(this.frameBuffer)
     }
 
+    ws.onopen = () => this.onOpen?.()
     ws.onclose = (ev) => {
       this.onClose?.(ev)
       this.ws = null
     }
-
-    ws.onerror = (ev) => {
-      this.onError?.(ev)
-    }
-
+    ws.onerror = (ev) => this.onError?.(ev)
     this.ws = ws
   }
 
   public disconnect(): void {
-    if (this.ws) {
-      this.ws.close()
-      this.ws = null
-    }
-  }
-
-  public get readyState(): number | null {
-    return this.ws?.readyState ?? null
+    this.ws?.close()
+    this.ws = null
   }
 }
