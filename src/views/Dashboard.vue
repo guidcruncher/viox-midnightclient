@@ -17,6 +17,17 @@ import { ref, onMounted } from 'vue'
 import { ApiClient } from '@/api'
 import { visualizerComponent } from '@/visualizers/'
 
+import { onBeforeRouteLeave } from 'vue-router'
+
+onBeforeRouteLeave((to, from) => {
+  // If we are moving from home to any other page
+  if (from.name === 'dashboard') {
+    window.location.href = to.fullPath 
+    return false // Cancel the SPA navigation to let the browser reload
+  }
+})
+
+
 const isVisual = ref(true)
 const is24Hour = ref(true)
 const ready = ref(false)
