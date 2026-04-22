@@ -5,9 +5,13 @@ export type FftFrame = Float32Array
 
 export interface FftClientOptions {
   url?: string
+  /** Called when a new FFT frame arrives */
   onFrame?: (frame: FftFrame) => void
+  /** Called when socket opens */
   onOpen?: () => void
+  /** Called when socket closes */
   onClose?: (ev: CloseEvent) => void
+  /** Called on error */
   onError?: (ev: Event) => void
 }
 
@@ -19,8 +23,11 @@ export class FftClient {
   private readonly onClose?: (ev: CloseEvent) => void
   private readonly onError?: (ev: Event) => void
 
-  // OPTIMIZATION: Persistent buffer to reduce GC pressure
+  // --- OPTIMIZATION STATE ---
+  private processing = false
+  // Pre-allocated buffer to prevent Garbage Collection thrashing
   private frameBuffer = new Float32Array(64)
+  // ---------------------------
 
   constructor(options: FftClientOptions) {
     this.url = options.url || `${getBaseUrl().replace(/^http/, 'ws')}/api/fft`
@@ -31,28 +38,64 @@ export class FftClient {
   }
 
   public connect(): void {
-    if (this.ws?.readyState === WebSocket.OPEN) return
+    if (
+      this.ws &&
+      (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)
+    ) {
+      return
+    }
 
     const ws = new WebSocket(this.url)
     ws.binaryType = 'arraybuffer'
 
-    ws.onmessage = (event: MessageEvent<ArrayBuffer>) => {
-      // Use .set() to copy data into the existing buffer instead of allocating a new one
-      this.frameBuffer.set(new Float32Array(event.data))
-      this.onFrame?.(this.frameBuffer)
+    ws.onopen = () => {
+      this.onOpen?.()
     }
 
-    ws.onopen = () => this.onOpen?.()
+    ws.onmessage = (event: MessageEvent<ArrayBuffer>) => {
+      /**
+       * CLIENT LOCKING (Backpressure):
+       * If we are still busy processing the previous frame, drop this one.
+       * This prevents the browser task queue from being "swamped" if the
+       * server outpaces the client's render speed.
+       */
+      if (this.processing) {
+        return
+      }
+
+      this.processing = true
+
+      try {
+        // Use .set() to copy data into the existing buffer (zero-allocation)
+        const incomingData = new Float32Array(event.data)
+        this.frameBuffer.set(incomingData)
+
+        // Execute the visualizer update
+        if (this.onFrame) {
+          this.onFrame(this.frameBuffer)
+        }
+      } finally {
+        // Unlock so the next available message can be accepted
+        this.processing = false
+      }
+    }
+
     ws.onclose = (ev) => {
       this.onClose?.(ev)
       this.ws = null
     }
-    ws.onerror = (ev) => this.onError?.(ev)
+
+    ws.onerror = (ev) => {
+      this.onError?.(ev)
+    }
+
     this.ws = ws
   }
 
   public disconnect(): void {
-    this.ws?.close()
-    this.ws = null
+    if (this.ws) {
+      this.ws.close()
+      this.ws = null
+    }
   }
 }
