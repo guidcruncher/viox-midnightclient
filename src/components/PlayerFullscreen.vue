@@ -6,6 +6,22 @@ import PlayerArtwork from './PlayerArtwork.vue'
 import PlayerControls from './PlayerControls.vue'
 
 const { showFullPlayer, currentTrack, progressValue } = usePlayer()
+
+const getTimeValue = (totalSeconds: number) => {
+  if (totalSeconds < 0) totalSeconds = 0
+
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = Math.floor(totalSeconds % 60)
+
+  const parts: string[] = []
+
+  parts.push(hours.toString().padStart(2, '0'))
+  parts.push(minutes.toString().padStart(2, '0'))
+  parts.push(seconds.toString().padStart(2, '0'))
+
+  return parts.join(':')
+}
 </script>
 
 <template>
@@ -78,18 +94,18 @@ const { showFullPlayer, currentTrack, progressValue } = usePlayer()
           <div class="group mt-8 landscape:mt-4 w-full">
             <div class="relative h-2 w-full cursor-pointer rounded-full bg-white/10">
               <div
-                class="absolute h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 shadow-[0_0_15px_rgba(34,211,238,0.5)]"
+                class="absolute h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all duration-500 ease-linear"
                 :style="{ width: progressValue.percent + '%' }"
               ></div>
               <div
-                class="absolute top-1/2 -ml-2 h-4 w-4 -translate-y-1/2 rounded-full bg-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
+                class="absolute top-1/2 -ml-2 h-4 w-4 -translate-y-1/2 rounded-full bg-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 transition-all duration-500 ease-linear"
                 :style="{ left: progressValue.percent + '%' }"
               ></div>
             </div>
 
             <div class="mt-2 flex justify-between text-xs font-medium text-white/40">
-              <span>1:24</span>
-              <span>3:45</span>
+              <span>{{ getTimeValue(progressValue.current) }}</span>
+              <span>{{ getTimeValue(progressValue.total) }}</span>
             </div>
           </div>
 
