@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 
 @theme {
+  /* v4 uses rem by default, so 44rem is ~704px */
+  --breakpoint-md: 44rem; 
+
   /* Brand Colors */
   --color-viox-deep: #2d005f;
   --color-viox-electric: #8a2be2;
