@@ -1,12 +1,12 @@
 <template>
   <!-- Fullscreen container -->
   <div
-    class="w-full h-[65vh] flex flex-col text-slate-100 overflow-hidden rounded-xl border border border-slate-800 bg-slate-900"
+    class="w-full h-full flex flex-col text-slate-100 overflow-hidden rounded-xl border border-slate-800 bg-slate-900"
     v-if="ready && isVisual"
   >
-    <component :is="visualizerComponentToRender" />
-    <Clock :is24Hour="is24Hour" layout="wide" />
+    <component :is="visualizerComponentToRender" class="flex-1" />
   </div>
+
   <div class="fixed inset-0 flex items-center justify-center" v-if="ready && !isVisual">
     <Clock :is24Hour="is24Hour" />
   </div>

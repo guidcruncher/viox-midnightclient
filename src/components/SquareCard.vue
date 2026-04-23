@@ -20,7 +20,7 @@ defineEmits<{
     tabindex="0"
     @click.stop="$emit('click', item)"
     @keydown.enter.stop="$emit('click', item)"
-    class="group relative aspect-square w-[125px] md:w-[200px] overflow-hidden rounded-3xl border transition-all duration-300 ease-out active:scale-95 touch-manipulation text-left cursor-pointer"
+    class="group relative aspect-square w-[150px] sm:w-[150px] md:w-[185px] lg:w-[215px] xl:w-[215px] 2xl:w-[215px] overflow-hidden rounded-3xl border transition-all duration-300 ease-out active:scale-95 touch-manipulation text-left cursor-pointer"
     :class="
       active
         ? 'border-cyan-400/50 bg-cyan-900/20 shadow-[0_0_30px_rgba(34,211,238,0.2)]'

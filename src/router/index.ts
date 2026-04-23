@@ -15,6 +15,7 @@ import PodcastView from '../views/PodcastView.vue'
 import QueueView from '../views/QueueView.vue'
 import SoundSettings from '../views/SoundSettings.vue'
 import Visualizers from '../views/Visualizers.vue'
+import DeviceView from '../views/DeviceView.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -85,6 +86,14 @@ const routes: RouteRecordRaw[] = [
             label: 'Sound',
             order: 5,
           },
+        },
+      },
+      {
+        path:'device',
+        name: 'device',
+        component: DeviceView,
+        meta: {
+          title: 'Device',
         },
       },
       {

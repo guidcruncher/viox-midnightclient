@@ -124,7 +124,7 @@ const handleFilter = async (filter: any) => {
         @load-more="handleLoadMore"
       >
         <div
-          class="grid grid-cols-3 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
+          class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
         >
           <SquareCard
             v-for="item in items"
