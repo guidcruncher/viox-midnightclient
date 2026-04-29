@@ -16,7 +16,7 @@
     "build": "vue-tsc -b && vite build --mode development",
     "build:prod": "NODE_ENV=production vue-tsc -b && vite build --mode production",
     "preview": "vite preview",
-    "format": "prettier --config ./.prettierrc --write src/",
+    "format": "prettier --no-error-on-unmatched-pattern --config ./.prettierrc --write src/",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "tidy": "pnpm run format && pnpm run lint:fix && knip --config ./knip.json",
